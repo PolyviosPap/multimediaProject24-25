@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Ολοκλήρωση Backend",
+    "description": "Υλοποίηση API endpoints",
+    "categoryId": 1,
+    "priorityId": 4,
+    "dueDate": "2025-03-01",
+    "status": "Open"
+  },
+  {
+    "id": 2,
+    "title": "Καθάρισμα Σαλονιού",
+    "description": "Σκούπισμα, σφουγγάρισμα, ξεσκόνισμα",
+    "categoryId": 2,
+    "priorityId": 2,
+    "dueDate": "2025-02-20",
+    "status": "Open"
+  },
+  {
+    "id": 3,
+    "title": "Αγορά Δώρου",
+    "description": "Αγορά δώρου γενεθλίων",
+    "categoryId": 3,
+    "priorityId": 3,
+    "dueDate": "2025-02-25",
+    "status": "In Progress"
+  }
+]

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="polpapntua.multimediaproject2425.MainController">
+
+    <TableView fx:id="taskTableView">
+        <columns>
+            <TableColumn fx:id="idColumn" text="Id" prefWidth="100"/>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="250"/>
+        </columns>
+    </TableView>
+</VBox>
