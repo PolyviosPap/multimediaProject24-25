@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
 
-<VBox spacing="10" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="polpapntua.multimediaproject2425.MainController">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="polpapntua.multimediaproject2425.controllers.MainController">
 
-    <TableView fx:id="taskTableView">
-        <columns>
-            <TableColumn fx:id="idColumn" text="Id" prefWidth="100"/>
-            <TableColumn fx:id="nameColumn" text="Name" prefWidth="250"/>
-        </columns>
-    </TableView>
+    <!-- Navigation Bar -->
+    <HBox fx:id="navbar">
+        <Button text="Tasks" onAction="#displayTasks"/>
+        <Button text="Categories" onAction="#displayCategories"/>
+    </HBox>
+
+    <!-- Dynamic Content Area -->
+    <BorderPane fx:id="contentPane"/>
 </VBox>

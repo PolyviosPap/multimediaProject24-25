@@ -16,4 +16,6 @@ module polpapntua.multimediaproject2425 {
     exports polpapntua.multimediaproject2425;
     exports polpapntua.multimediaproject2425.models;
     exports polpapntua.multimediaproject2425.enums;
+    exports polpapntua.multimediaproject2425.controllers;
+    opens polpapntua.multimediaproject2425.controllers to javafx.fxml;
 }

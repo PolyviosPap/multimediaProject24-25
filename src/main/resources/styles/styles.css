@@ -1,0 +1,13 @@
+#navbar {
+    -fx-background-color: #333;
+}
+
+Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+Button:hover {
+    -fx-background-color: rgba(140, 140, 140, 0.2);
+}

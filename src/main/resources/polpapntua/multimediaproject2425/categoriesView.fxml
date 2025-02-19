@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml">
+    <TableView fx:id="categoriesTableView">
+        <columns>
+            <TableColumn fx:id="categoriesIdColumn" text="Id" prefWidth="100"/>
+            <TableColumn fx:id="categoriesNameColumn" text="Name" prefWidth="250"/>
+        </columns>
+    </TableView>
+</AnchorPane>
