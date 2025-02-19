@@ -3,14 +3,14 @@
 <?import javafx.scene.control.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="polpapntua.multimediaproject2425.controllers.CategoriesController">
+            fx:controller="polpapntua.multimediaproject2425.controllers.PrioritiesController">
     <VBox AnchorPane.topAnchor="0.0"
           AnchorPane.bottomAnchor="0.0"
           AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0">
-        <TableView fx:id="categoriesTableView" VBox.vgrow="ALWAYS">
+        <TableView fx:id="prioritiesTableView" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="categoriesNameColumn" text="Name"/>
+                <TableColumn fx:id="prioritiesNameColumn" text="Name"/>
             </columns>
         </TableView>
     </VBox>

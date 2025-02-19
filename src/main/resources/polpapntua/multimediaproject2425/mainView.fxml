@@ -13,8 +13,9 @@
     <HBox fx:id="navbar">
         <Button text="Tasks" onAction="#displayTasks"/>
         <Button text="Categories" onAction="#displayCategories"/>
+        <Button text="Priorities" onAction="#displayPriorities"/>
     </HBox>
 
     <!-- Dynamic Content Area -->
-    <BorderPane fx:id="contentPane"/>
+    <BorderPane fx:id="contentPane" VBox.vgrow="ALWAYS"/>
 </VBox>
