@@ -1,5 +1,6 @@
 package polpapntua.multimediaproject2425.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import polpapntua.multimediaproject2425.enums.TaskStatus;
 import java.time.LocalDate;
 
@@ -11,6 +12,7 @@ public class Task {
     public Category category;
     public Long priorityId;
     public Priority priority;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     public LocalDate dueDate;
     public TaskStatus status;
     //public List<Reminder> reminders;

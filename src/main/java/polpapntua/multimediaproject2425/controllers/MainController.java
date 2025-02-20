@@ -26,7 +26,7 @@ public class MainController {
     private final PrioritiesService prioritiesService = new PrioritiesService("src/main/resources/data/priorities.json");
     private final ObservableList<Priority> priorities = FXCollections.observableArrayList(prioritiesService.getAllPriorities());
 
-    private final TasksService tasksService = new TasksService("src/main/resources/data/tasks.json");
+    private final TasksService tasksService = new TasksService("src/main/resources/data/tasks", categories, priorities);
     private final ObservableList<Task> tasks = FXCollections.observableArrayList(tasksService.getAllTasks());
 
 
