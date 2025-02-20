@@ -1,54 +1,124 @@
 package polpapntua.multimediaproject2425.models;
 
 import polpapntua.multimediaproject2425.enums.TaskStatus;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Task {
     public Long id;
     public String title;
     public String description;
+    public Long categoryId;
     public Category category;
+    public Long priorityId;
     public Priority priority;
     public LocalDate dueDate;
     public TaskStatus status;
-    public List<Reminder> reminders;
+    //public List<Reminder> reminders;
 
     public Task() { }
 
-    public Task(String title, String description, Category category, Priority priority, LocalDate dueDate) {
+    public Task(Long id, String title, String description, Long categoryId, Long priorityId, LocalDate dueDate, TaskStatus status) {
+        this.id = id;
         this.title = title;
         this.description = description;
+        this.categoryId = categoryId;
+        this.priorityId = priorityId;
+        this.dueDate = dueDate;
+        this.status = status;
+    }
+
+    public Task(Long id, String title, String description, Long categoryId, Category category, Long priorityId, Priority priority, LocalDate dueDate) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.categoryId = categoryId;
         this.category = category;
+        this.priorityId = priorityId;
         this.priority = priority;
         this.dueDate = dueDate;
-        this.status = TaskStatus.OPEN;
-        this.reminders = new ArrayList<>();
     }
 
-    public void addReminder(Reminder reminder) {
-        if (this.status != TaskStatus.COMPLETED) {
-            reminders.add(reminder);
-        }
+    public Task(Long id, String title, String description, Long categoryId, Category category, Long priorityId, Priority priority, LocalDate dueDate, TaskStatus status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.categoryId = categoryId;
+        this.category = category;
+        this.priorityId = priorityId;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.status = status;
     }
 
-    public void completeTask() {
-        this.status = TaskStatus.COMPLETED;
-        reminders.clear();
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public Long getPriorityId() {
+        return priorityId;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setPriorityId(Long priorityId) {
+        this.priorityId = priorityId;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     public void setStatus(TaskStatus status) {
         this.status = status;
-        if (status == TaskStatus.COMPLETED) {
-            reminders.clear();
-        }
     }
-
-    public String getTitle() { return title; }
-
-    public TaskStatus getStatus() { return status; }
-
-    public Priority getPriority() { return priority; }
 }

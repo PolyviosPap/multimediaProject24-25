@@ -9,8 +9,10 @@ import javafx.scene.layout.BorderPane;
 import polpapntua.multimediaproject2425.Main;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
+import polpapntua.multimediaproject2425.models.Task;
 import polpapntua.multimediaproject2425.services.CategoriesService;
 import polpapntua.multimediaproject2425.services.PrioritiesService;
+import polpapntua.multimediaproject2425.services.TasksService;
 
 import java.io.IOException;
 
@@ -23,6 +25,10 @@ public class MainController {
 
     private final PrioritiesService prioritiesService = new PrioritiesService("src/main/resources/data/priorities.json");
     private final ObservableList<Priority> priorities = FXCollections.observableArrayList(prioritiesService.getAllPriorities());
+
+    private final TasksService tasksService = new TasksService("src/main/resources/data/tasks.json");
+    private final ObservableList<Task> tasks = FXCollections.observableArrayList(tasksService.getAllTasks());
+
 
     public void displayTasks() {
         loadView("tasksView.fxml");

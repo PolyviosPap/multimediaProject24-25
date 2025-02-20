@@ -10,6 +10,7 @@ module polpapntua.multimediaproject2425 {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
 
     opens polpapntua.multimediaproject2425 to javafx.fxml;
@@ -18,4 +19,6 @@ module polpapntua.multimediaproject2425 {
     exports polpapntua.multimediaproject2425.enums;
     exports polpapntua.multimediaproject2425.controllers;
     opens polpapntua.multimediaproject2425.controllers to javafx.fxml;
+
+    opens polpapntua.multimediaproject2425.helpers to com.fasterxml.jackson.databind;
 }

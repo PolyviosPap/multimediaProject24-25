@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CategoriesService {
-    private List<Category> categories;
+    private final List<Category> categories;
 
     public CategoriesService(String jsonFilePath) {
         this.categories = loadCategoriesFromJson(jsonFilePath);
