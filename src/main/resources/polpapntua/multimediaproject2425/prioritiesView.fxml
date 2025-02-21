@@ -11,6 +11,7 @@
         <TableView fx:id="prioritiesTableView" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="prioritiesNameColumn" text="Name"/>
+                <TableColumn fx:id="prioritiesLevelColumn" text="Level"/>
             </columns>
         </TableView>
     </VBox>

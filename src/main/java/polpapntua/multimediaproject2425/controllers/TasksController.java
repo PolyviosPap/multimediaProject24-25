@@ -1,22 +1,17 @@
 package polpapntua.multimediaproject2425.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import polpapntua.multimediaproject2425.models.Category;
-import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
-
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class TasksController {
     @FXML
     private TableView<Task> tasksTableView;
-
-    //@FXML
-    //private TableColumn<Task, Long> tasksIdColumn;
 
     @FXML
     private TableColumn<Task, String> tasksTitleColumn;
@@ -28,10 +23,10 @@ public class TasksController {
     private TableColumn<Task, String> tasksCategoryColumn;
 
     @FXML
-    private TableColumn<Priority, String> tasksPriorityColumn;
+    private TableColumn<Task, String> tasksPriorityColumn;
 
     @FXML
-    private TableColumn<Task, LocalDate> tasksDueDateColumn;
+    private TableColumn<Task, String> tasksDueDateColumn;
 
     @FXML
     private TableColumn<Task, String> tasksStatusColumn;
@@ -40,17 +35,29 @@ public class TasksController {
     public void initialize() {
         tasksTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // added to remove the horizontal scrollbar
 
-        //categoriesIdColumn.setCellValueFactory(new PropertyValueFactory<>("Id"));
+        tasksTitleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitle()));
 
-        tasksTitleColumn.setCellValueFactory(new PropertyValueFactory<>("Title"));
-        tasksDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("Description"));
-        tasksCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("CategoryName"));
-        tasksPriorityColumn.setCellValueFactory(new PropertyValueFactory<>("PriorityName"));
-        tasksDueDateColumn.setCellValueFactory(new PropertyValueFactory<>("DueDate"));
-        tasksStatusColumn.setCellValueFactory(new PropertyValueFactory<>("Status"));
+        tasksDescriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+
+        tasksCategoryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory().getName()));
+
+        tasksPriorityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPriority().getName()));
+        // Custom comparator for Priority column, depending on the Priority lvl.
+        tasksPriorityColumn.setComparator(Comparator.comparing(s -> {
+            for (Task task : tasksTableView.getItems()) {
+                if (task.getPriority().getName().equals(s)) {
+                    return task.getPriority().getLevel();
+                }
+            }
+            return Integer.MAX_VALUE; // Fallback value for safety
+        }));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        tasksDueDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDueDate().format(formatter)));
+
+        tasksStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
     }
 
-    // Method to receive categories from MainController
     public void setTasks(ObservableList<Task> tasksList) {
         tasksTableView.setItems(tasksList);
     }

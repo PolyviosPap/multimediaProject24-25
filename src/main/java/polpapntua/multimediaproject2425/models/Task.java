@@ -84,9 +84,7 @@ public class Task {
 
     public String getPriorityName() { return priority.getName(); }
 
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
+    public LocalDate getDueDate() { return dueDate; }
 
     public TaskStatus getStatus() {
         return status;
