@@ -31,7 +31,16 @@ public class MainController {
 
 
     public void displayTasks() {
-        loadView("tasksView.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("tasksView.fxml"));  // 1. load the view
+            Parent tasksView = loader.load();
+            TasksController controller = loader.getController();   // 2. get its controller's instance
+            controller.setTasks(tasks);   // 3. pass the data to the controller
+
+            contentPane.setCenter(tasksView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void displayCategories() {

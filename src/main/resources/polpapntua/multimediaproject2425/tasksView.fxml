@@ -2,6 +2,21 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml">
-    <Label text="Welcome to tasks Page"/>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="polpapntua.multimediaproject2425.controllers.TasksController">
+<VBox AnchorPane.topAnchor="0.0"
+      AnchorPane.bottomAnchor="0.0"
+      AnchorPane.leftAnchor="0.0"
+      AnchorPane.rightAnchor="0.0">
+    <TableView fx:id="tasksTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="tasksTitleColumn" text="Title"/>
+            <TableColumn fx:id="tasksDescriptionColumn" text="Description"/>
+            <TableColumn fx:id="tasksCategoryColumn" text="Category"/>
+            <TableColumn fx:id="tasksPriorityColumn" text="Priority"/>
+            <TableColumn fx:id="tasksDueDateColumn" text="Due"/>
+            <TableColumn fx:id="tasksStatusColumn" text="Status"/>
+        </columns>
+    </TableView>
+</VBox>
 </AnchorPane>

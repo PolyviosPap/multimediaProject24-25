@@ -72,6 +72,8 @@ public class Task {
         return category;
     }
 
+    public String getCategoryName() { return category.getName(); }
+
     public Long getPriorityId() {
         return priorityId;
     }
@@ -79,6 +81,8 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
+
+    public String getPriorityName() { return priority.getName(); }
 
     public LocalDate getDueDate() {
         return dueDate;
@@ -88,9 +92,7 @@ public class Task {
         return status;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
     public void setTitle(String title) {
         this.title = title;
@@ -100,19 +102,13 @@ public class Task {
         this.description = description;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public void setCategory(Category category) {
+        this.categoryId = category.getId();
         this.category = category;
     }
 
-    public void setPriorityId(Long priorityId) {
-        this.priorityId = priorityId;
-    }
-
     public void setPriority(Priority priority) {
+        this.priorityId = priority.getId();
         this.priority = priority;
     }
 

@@ -7,9 +7,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import polpapntua.multimediaproject2425.models.Category;
 
-import java.io.IOException;
-import java.util.List;
-
 public class CategoriesController {
     @FXML
     private TableView<Category> categoriesTableView;
