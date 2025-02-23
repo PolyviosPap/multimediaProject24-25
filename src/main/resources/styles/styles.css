@@ -11,3 +11,7 @@ Button {
 Button:hover {
     -fx-background-color: rgba(140, 140, 140, 0.2);
 }
+
+.actionColumn {
+    -fx-pref-width: 45px;
+}

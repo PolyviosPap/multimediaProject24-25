@@ -11,6 +11,8 @@
         <TableView fx:id="categoriesTableView" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="categoriesNameColumn" text="Name"/>
+                <!--<TableColumn fx:id="undoColumn"/>-->
+                <TableColumn fx:id="categoriesSaveColumn" styleClass="actionColumn"/>
             </columns>
         </TableView>
     </VBox>

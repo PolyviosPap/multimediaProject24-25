@@ -14,7 +14,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        logger.info("Hello World!");
+        //logger.info("Hello World!");
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("mainView.fxml"));
         VBox root = fxmlLoader.load();
