@@ -1,6 +1,5 @@
 package polpapntua.multimediaproject2425.controllers;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,16 +9,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.helpers;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 import static polpapntua.multimediaproject2425.helpers.createButton;
 
 public class CategoriesController {
@@ -49,7 +44,7 @@ public class CategoriesController {
             @Override
             public TableCell<Category, Void> call(TableColumn<Category, Void> param) {
                 return new TableCell<>() {
-                    private final Button saveButton = createButton("/icons/save-icon.png", "Save");
+                    private final Button saveButton = createButton("/icons/save-icon.png");
                     {
                         saveButton.setOnAction(event -> {
                             List<Category> categories = new ArrayList<>(getTableView().getItems());

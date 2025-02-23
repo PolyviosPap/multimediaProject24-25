@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import polpapntua.multimediaproject2425.Main;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
@@ -17,6 +20,11 @@ import polpapntua.multimediaproject2425.services.TasksService;
 import java.io.IOException;
 
 public class MainController {
+    protected static final Logger logger = LogManager.getLogger();
+
+    @FXML
+    private HBox navbar;
+
     @FXML
     private BorderPane contentPane;
 
@@ -38,8 +46,8 @@ public class MainController {
             controller.setTasks(tasks);   // 3. pass the data to the controller
 
             contentPane.setCenter(tasksView);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            logger.error("Exception occurred while trying to display the tasks view: {}", ex.getMessage(), ex);
         }
     }
 
@@ -51,8 +59,8 @@ public class MainController {
             controller.setCategories(categories);   // 3. pass the data to the controller
 
             contentPane.setCenter(categoriesView);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            logger.error("Exception occurred while trying to display the categories view: {}", ex.getMessage(), ex);
         }
     }
 
@@ -64,17 +72,8 @@ public class MainController {
             controller.setPriorities(priorities);   // 3. pass the data to the controller
 
             contentPane.setCenter(prioritiesView);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadView(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlPath));
-            contentPane.setCenter(loader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            logger.error("Exception occurred while trying to display the priorities view: {}", ex.getMessage(), ex);
         }
     }
 }

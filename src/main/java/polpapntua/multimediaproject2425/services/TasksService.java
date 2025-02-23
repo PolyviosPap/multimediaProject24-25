@@ -3,6 +3,8 @@ package polpapntua.multimediaproject2425.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
@@ -10,8 +12,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TasksService {
+    protected static final Logger logger = LogManager.getLogger();
+
     private final List<Task> tasks;
     private final List<Category> categories;
     private final List<Priority> priorities;
@@ -41,15 +46,15 @@ public class TasksService {
 
         for (File jsonFile : jsonFiles) {
             try {
-                Task task = objectMapper.readValue(jsonFile, new TypeReference<Task>() {});
+                Task task = objectMapper.readValue(jsonFile, new TypeReference<>() {
+                });
 
                 task.category = findCategoryById(task.categoryId);
                 task.priority = findPriorityById(task.priorityId);
 
                 allTasks.add(task);
-            } catch (IOException e) {
-                System.err.println("Failed to read file: " + jsonFile.getName());
-                e.printStackTrace();
+            } catch (IOException ex) {
+                logger.error("Exception occurred while deserializing {}: {}", jsonFile, ex.getMessage(), ex);
             }
         }
 
@@ -58,14 +63,14 @@ public class TasksService {
 
     private Category findCategoryById(Long id) {
         return categories.stream()
-                .filter(cat -> cat.getId() == id)
+                .filter(cat -> Objects.equals(cat.getId(), id))
                 .findFirst()
                 .orElse(null); // Returns null if no match is found
     }
 
     private Priority findPriorityById(Long id) {
         return priorities.stream()
-                .filter(pr -> pr.getId() == id)
+                .filter(pr -> Objects.equals(pr.getId(), id))
                 .findFirst()
                 .orElse(null); // Returns null if no match is found
     }
