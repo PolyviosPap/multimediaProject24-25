@@ -2,6 +2,7 @@ package polpapntua.multimediaproject2425;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -21,6 +22,7 @@ public class helpers {
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
         Button button = new Button();
+        button.setPrefSize(24, 24);
         button.setGraphic(imageView);
         button.setStyle("-fx-background-color: transparent;");
         return button;
@@ -28,6 +30,7 @@ public class helpers {
 
     public static <T extends Serializable> void serializeObject(String filePath, T object) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // Pretty-print JSON
         try {
             objectMapper.writeValue(new File(filePath), object);

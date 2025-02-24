@@ -1,25 +1,21 @@
 package polpapntua.multimediaproject2425.controllers;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 import polpapntua.multimediaproject2425.models.Category;
+import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Objects;
-
-import static polpapntua.multimediaproject2425.helpers.createButton;
-import static polpapntua.multimediaproject2425.helpers.serializeObject;
 
 public class TasksController {
     @FXML
@@ -35,7 +31,7 @@ public class TasksController {
     private TableColumn<Task, String> tasksCategoryColumn;
 
     @FXML
-    private TableColumn<Task, String> tasksPriorityColumn;
+    private TableColumn<Task, Priority> tasksPriorityColumn;
 
     @FXML
     private TableColumn<Task, String> tasksDueDateColumn;
@@ -43,54 +39,45 @@ public class TasksController {
     @FXML
     private TableColumn<Task, String> tasksStatusColumn;
 
-    @FXML
-    private TableColumn<Task, Void> tasksSaveColumn;
+//    @FXML
+//    private TableColumn<Task, Void> tasksSaveColumn;
 
     @FXML
     public void initialize() {
         tasksTableView.setEditable(true);
 
-        tasksSaveColumn.setCellFactory(new Callback<>() {
-            @Override
-            public TableCell<Task, Void> call(TableColumn<Task, Void> param) {
-                return new TableCell<>() {
-                    private final Button saveButton = new Button();
-
-                    {
-                        // Set the save icon
-                        Image saveImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/save-icon.png")));
-                        ImageView imageView = new ImageView(saveImage);
-                        imageView.setFitWidth(20);
-                        imageView.setFitHeight(20);
-                        saveButton.setPrefSize(24, 24);
-                        saveButton.setGraphic(imageView);
-
-                        // Handle save click
-                        saveButton.setOnAction(event -> {
-                            Task task = getTableView().getItems().get(getIndex());
-                            String taskPath = "src/main/resources/data/task_" + task.getId().toString();
-                            serializeObject(taskPath, task);
-                        });
-                    }
-
-                    @Override
-                    protected void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(saveButton);
-                        }
-                    }
-                };
-            }
-        });
+//        tasksSaveColumn.setCellFactory(new Callback<>() {
+//            @Override
+//            public TableCell<Task, Void> call(TableColumn<Task, Void> param) {
+//                return new TableCell<>() {
+//                    private final Button saveButton = helpers.createButton("/icons/save-icon.png");
+//                    {
+//                        saveButton.setOnAction(event -> {
+//                            Task task = getTableView().getItems().get(getIndex());
+//                            String taskPath = "src/main/resources/data/tasks/task_" + task.getId().toString() + ".json";
+//                            serializeObject(taskPath, task);
+//                        });
+//                    }
+//
+//                    @Override
+//                    protected void updateItem(Void item, boolean empty) {
+//                        super.updateItem(item, empty);
+//                        if (empty) {
+//                            setGraphic(null);
+//                        } else {
+//                            setGraphic(saveButton);
+//                        }
+//                    }
+//                };
+//            }
+//        });
 
         tasksTitleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitle()));
         tasksTitleColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
         tasksTitleColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setTitle(event.getNewValue());
+            task.setHasBeenEdited(true);
         });
 
         tasksDescriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
@@ -98,15 +85,16 @@ public class TasksController {
         tasksDescriptionColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setDescription(event.getNewValue());
+            task.setHasBeenEdited(true);
         });
 
         tasksCategoryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory().getName()));
 
-        tasksPriorityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPriority().getName()));
+        tasksPriorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
         // Custom comparator for Priority column, depending on the Priority lvl.
         tasksPriorityColumn.setComparator(Comparator.comparing(s -> {
             for (Task task : tasksTableView.getItems()) {
-                if (task.getPriority().getName().equals(s)) {
+                if (task.getPriority().equals(s)) {
                     return task.getPriority().getLevel();
                 }
             }
@@ -115,7 +103,7 @@ public class TasksController {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         tasksDueDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDueDate().format(formatter)));
-        tasksDueDateColumn.setCellFactory(column -> new TableCell<Task, String>() {
+        tasksDueDateColumn.setCellFactory(column -> new TableCell<>() {
             private final DatePicker datePicker = new DatePicker();
             {
                 datePicker.setOnAction(event -> {
@@ -167,6 +155,7 @@ public class TasksController {
                 Task task = getTableView().getItems().get(getIndex());
                 task.setDueDate(LocalDate.parse(newDate, formatter));
                 setText(newDate);
+                task.setHasBeenEdited(true);
                 setGraphic(null);
             }
         });
@@ -174,7 +163,29 @@ public class TasksController {
         tasksStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
     }
 
-    public void setTasks(ObservableList<Task> tasksList) {
-        tasksTableView.setItems(tasksList);
+    public void setNeededObjects(ObservableList<Task> tasks, ObservableList<Category> categories, ObservableList<Priority> priorities) {
+        tasksTableView.setItems(tasks);
+
+        tasksPriorityColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
+                new StringConverter<Priority>() {
+                    @Override
+                    public String toString(Priority priority) {
+                        return priority != null ? priority.getName() : "";
+                    }
+
+                    @Override
+                    public Priority fromString(String string) {
+                        return priorities.stream()
+                                .filter(p -> p.getName().equals(string))
+                                .findFirst()
+                                .orElse(null);
+                    }
+                },
+                FXCollections.observableArrayList(priorities)
+        ));
+        tasksPriorityColumn.setOnEditCommit(event -> {
+            Task task = event.getRowValue();
+            task.setPriority(event.getNewValue());
+        });
     }
 }

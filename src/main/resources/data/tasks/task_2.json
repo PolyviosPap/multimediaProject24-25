@@ -1,9 +1,9 @@
 {
-  "id": 2,
-  "title": "Καθάρισμα Σαλονιού",
-  "description": "Σκούπισμα, σφουγγάρισμα, ξεσκόνισμα",
-  "categoryId": 2,
-  "priorityId": 1,
-  "dueDate": "2025-02-20",
-  "status": "OPEN"
+  "id" : 2,
+  "title" : "Καθάρισμα Σαλονιού",
+  "description" : "Σκούπισμα, σφουγγάρισμα, ξεσκόνισμα",
+  "categoryId" : 2,
+  "priorityId" : 2,
+  "dueDate" : "2025-02-20",
+  "status" : "OPEN"
 }

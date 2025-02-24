@@ -10,14 +10,16 @@ import javafx.scene.layout.HBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polpapntua.multimediaproject2425.Main;
+import polpapntua.multimediaproject2425.helpers;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
 import polpapntua.multimediaproject2425.services.CategoriesService;
 import polpapntua.multimediaproject2425.services.PrioritiesService;
 import polpapntua.multimediaproject2425.services.TasksService;
-
 import java.io.IOException;
+
+import static polpapntua.multimediaproject2425.helpers.serializeObject;
 
 public class MainController {
     protected static final Logger logger = LogManager.getLogger();
@@ -37,13 +39,12 @@ public class MainController {
     private final TasksService tasksService = new TasksService("src/main/resources/data/tasks", categories, priorities);
     private final ObservableList<Task> tasks = FXCollections.observableArrayList(tasksService.getAllTasks());
 
-
     public void displayTasks() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("tasksView.fxml"));  // 1. load the view
             Parent tasksView = loader.load();
             TasksController controller = loader.getController();   // 2. get its controller's instance
-            controller.setTasks(tasks);   // 3. pass the data to the controller
+            controller.setNeededObjects(tasks, categories, priorities); // 3. pass the data to the controller
 
             contentPane.setCenter(tasksView);
         } catch (IOException ex) {
@@ -74,6 +75,31 @@ public class MainController {
             contentPane.setCenter(prioritiesView);
         } catch (IOException ex) {
             logger.error("Exception occurred while trying to display the priorities view: {}", ex.getMessage(), ex);
+        }
+    }
+
+    public void saveAllFiles() {
+        logger.info("About to scan for edited files and save if any...");
+
+        for (Category category : categories) {
+            if (category.getHasBeenEdited()) {
+                helpers.serializeObjects("src/main/resources/data/categories.json", categories);
+                break;
+            }
+        }
+
+        for (Priority priority : priorities) {
+            if (priority.getBeenEdited()) {
+                helpers.serializeObjects("src/main/resources/data/priorities.json", priorities);
+                break;
+            }
+        }
+
+        for (Task task : tasks) {
+            if (task.getHasBeenEdited()) {
+                String taskPath = "src/main/resources/data/tasks/task_" + task.getId().toString() + ".json";
+                serializeObject(taskPath, task);
+            }
         }
     }
 }

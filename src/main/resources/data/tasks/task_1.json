@@ -1,9 +1,9 @@
 {
-  "id": 1,
-  "title": "Ολοκλήρωση Backend",
-  "description": "Υλοποίηση API endpoints",
-  "categoryId": 1,
-  "priorityId": 3,
-  "dueDate": "2025-03-01",
-  "status": "OPEN"
+  "id" : 1,
+  "title" : "Ολοκλήρωση Backend",
+  "description" : "Υλοποίηση API endpoints",
+  "categoryId" : 1,
+  "priorityId" : 1,
+  "dueDate" : "2025-03-01",
+  "status" : "OPEN"
 }

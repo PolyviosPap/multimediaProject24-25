@@ -1,6 +1,7 @@
 package polpapntua.multimediaproject2425.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import polpapntua.multimediaproject2425.enums.TaskStatus;
 
 import java.io.Serial;
@@ -11,17 +12,21 @@ public class Task implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public Long id;
-    public String title;
-    public String description;
-    public Long categoryId;
-    public Category category;
-    public Long priorityId;
-    public Priority priority;
+    private Long id;
+    private String title;
+    private String description;
+    private Long categoryId;
+    @JsonIgnore
+    private Category category;
+    private Long priorityId;
+    @JsonIgnore
+    private Priority priority;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    public LocalDate dueDate;
-    public TaskStatus status;
+    private LocalDate dueDate;
+    private TaskStatus status;
     //public List<Reminder> reminders;
+    @JsonIgnore
+    private boolean hasBeenEdited;
 
     public Task() { }
 
@@ -73,13 +78,12 @@ public class Task implements Serializable {
     public String getDescription() {
         return description;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setDescription(String description) { this.description = description; }
 
     public Long getCategoryId() {
         return categoryId;
     }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) {
@@ -87,11 +91,10 @@ public class Task implements Serializable {
         this.category = category;
     }
 
-    public String getCategoryName() { return category.getName(); }
-
     public Long getPriorityId() {
         return priorityId;
     }
+    public void setPriorityId(Long priorityId) { this.priorityId = priorityId; }
 
     public Priority getPriority() {
         return priority;
@@ -101,17 +104,16 @@ public class Task implements Serializable {
         this.priority = priority;
     }
 
-    public String getPriorityName() { return priority.getName(); }
-
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    public TaskStatus getStatus() {
-        return status;
-    }
+    public TaskStatus getStatus() { return status; }
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
+
+    public boolean getHasBeenEdited() { return this.hasBeenEdited; }
+    public void setHasBeenEdited(boolean hasBeenEdited) { this.hasBeenEdited = hasBeenEdited; }
 }

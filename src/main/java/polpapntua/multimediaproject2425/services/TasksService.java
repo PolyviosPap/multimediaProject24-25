@@ -49,8 +49,8 @@ public class TasksService {
                 Task task = objectMapper.readValue(jsonFile, new TypeReference<>() {
                 });
 
-                task.category = findCategoryById(task.categoryId);
-                task.priority = findPriorityById(task.priorityId);
+                task.setCategory(findCategoryById(task.getCategoryId()));
+                task.setPriority(findPriorityById(task.getPriorityId()));
 
                 allTasks.add(task);
             } catch (IOException ex) {
@@ -75,7 +75,5 @@ public class TasksService {
                 .orElse(null); // Returns null if no match is found
     }
 
-    public List<Task> getAllTasks() {
-        return tasks;
-    }
+    public List<Task> getAllTasks() { return tasks; }
 }

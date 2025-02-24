@@ -1,5 +1,7 @@
 package polpapntua.multimediaproject2425.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -10,6 +12,8 @@ public class Priority implements Serializable {
     private Long id;
     private String name;
     private int level;
+    @JsonIgnore
+    private boolean hasBeenEdited;
 
     public Priority() { }
 
@@ -26,4 +30,7 @@ public class Priority implements Serializable {
 
     public int getLevel() { return this.level; }
     public void setLevel(int level) { this.level = level; }
+
+    public boolean getBeenEdited() { return this.hasBeenEdited; }
+    public void setHasBeenEdited(boolean hasBeenEdited) { this.hasBeenEdited = hasBeenEdited; }
 }
