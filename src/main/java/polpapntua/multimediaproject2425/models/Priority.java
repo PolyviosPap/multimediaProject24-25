@@ -1,11 +1,15 @@
 package polpapntua.multimediaproject2425.models;
 
-public class Priority {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Priority implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String name;
     private int level;
-
-    public static final Priority DEFAULT = new Priority("Default", 1);
 
     public Priority() { }
 

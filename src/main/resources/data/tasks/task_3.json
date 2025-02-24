@@ -3,7 +3,7 @@
   "title": "Αγορά Δώρου",
   "description": "Αγορά δώρου γενεθλίων",
   "categoryId": 3,
-  "priorityId": 3,
+  "priorityId": 2,
   "dueDate": "2025-02-25",
   "status": "IN_PROGRESS"
 }

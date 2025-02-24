@@ -2,9 +2,15 @@ package polpapntua.multimediaproject2425.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import polpapntua.multimediaproject2425.enums.TaskStatus;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Task {
+public class Task implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     public Long id;
     public String title;
     public String description;

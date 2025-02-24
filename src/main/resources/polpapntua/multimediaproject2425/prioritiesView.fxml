@@ -12,6 +12,7 @@
             <columns>
                 <TableColumn fx:id="prioritiesNameColumn" text="Name"/>
                 <TableColumn fx:id="prioritiesLevelColumn" text="Level"/>
+                <TableColumn fx:id="prioritiesSaveColumn" styleClass="saveColumn"/>
             </columns>
         </TableView>
     </VBox>

@@ -2,9 +2,11 @@ package polpapntua.multimediaproject2425;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.converter.IntegerStringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.io.*;
@@ -24,6 +26,17 @@ public class helpers {
         return button;
     }
 
+    public static <T extends Serializable> void serializeObject(String filePath, T object) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // Pretty-print JSON
+        try {
+            objectMapper.writeValue(new File(filePath), object);
+            System.out.println("File saved successfully: " + filePath);
+        } catch (IOException ex) {
+            logger.error("Exception occurred while serializing {}: {}", filePath, ex.getMessage(), ex);
+        }
+    }
+
     public static <T extends Serializable> void serializeObjects(String filePath, List<T> objects) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // Pretty-print JSON
@@ -33,5 +46,24 @@ public class helpers {
         } catch (IOException ex) {
             logger.error("Exception occurred while serializing {}: {}", filePath, ex.getMessage(), ex);
         }
+    }
+
+    public static class SafeIntegerStringConverter extends IntegerStringConverter {
+        @Override
+        public Integer fromString(String string) {
+            try {
+                return (string == null || string.trim().isEmpty()) ? null : Integer.parseInt(string);
+            } catch (NumberFormatException e) {
+                return null; // Return null if the input is invalid
+            }
+        }
+    }
+
+    public static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

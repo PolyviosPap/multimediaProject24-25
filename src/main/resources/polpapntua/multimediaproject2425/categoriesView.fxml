@@ -12,7 +12,7 @@
             <columns>
                 <TableColumn fx:id="categoriesNameColumn" text="Name"/>
                 <!--<TableColumn fx:id="undoColumn"/>-->
-                <TableColumn fx:id="categoriesSaveColumn" styleClass="actionColumn"/>
+                <TableColumn fx:id="categoriesSaveColumn" styleClass="saveColumn"/>
             </columns>
         </TableView>
     </VBox>
