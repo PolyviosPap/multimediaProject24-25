@@ -33,9 +33,10 @@
               AnchorPane.rightAnchor="50.0">
             <Label text="Add New Priority"/>
             <TextField fx:id="addNewPriorityName" promptText="Priority Name"/>
+            <Spinner fx:id="addNewPriorityLevel" promptText="Priority Level 0-100" editable="true"/>
             <HBox spacing="10">
                 <Button text="Cancel" onAction="#onCancel" />
-                <Button text="Save"  onAction="#onPrioritySave" />
+                <Button text="Save" onAction="#onCategorySave" />
             </HBox>
         </VBox>
     </AnchorPane>

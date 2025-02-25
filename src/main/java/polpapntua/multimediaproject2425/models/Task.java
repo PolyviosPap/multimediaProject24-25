@@ -64,6 +64,19 @@ public class Task implements Serializable {
         this.status = status;
     }
 
+    public Task(BigInteger id, String title, String description, BigInteger categoryId, Category category, BigInteger priorityId, Priority priority, LocalDate dueDate, TaskStatus status, boolean hasBeenEdited) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.categoryId = categoryId;
+        this.category = category;
+        this.priorityId = priorityId;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.status = status;
+        this.hasBeenEdited = hasBeenEdited;
+    }
+
     public BigInteger getId() {
         return id;
     }

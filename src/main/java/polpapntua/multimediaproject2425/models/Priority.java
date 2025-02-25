@@ -23,6 +23,13 @@ public class Priority implements Serializable {
         this.level = level;
     }
 
+    public Priority(BigInteger id, String name, int level, boolean hasBeenEdited) {
+        this.id = id;
+        this.name = name;
+        this.level = level;
+        this.hasBeenEdited = hasBeenEdited;
+    }
+
     public BigInteger getId() { return id; }
     public void setId(BigInteger id) { this.id = id; }
 
@@ -32,6 +39,6 @@ public class Priority implements Serializable {
     public int getLevel() { return this.level; }
     public void setLevel(int level) { this.level = level; }
 
-    public boolean getBeenEdited() { return this.hasBeenEdited; }
+    public boolean getHasBeenEdited() { return this.hasBeenEdited; }
     public void setHasBeenEdited(boolean hasBeenEdited) { this.hasBeenEdited = hasBeenEdited; }
 }

@@ -33,7 +33,7 @@ public class CategoriesController {
     @FXML
     private TextField addNewCategoryName;
 
-    private BigInteger maxCategoryId = BigInteger.valueOf(0);
+    private BigInteger maxCategoryId = BigInteger.ZERO;
 
     @FXML
     public void initialize() {
@@ -69,7 +69,7 @@ public class CategoriesController {
         maxCategoryId = this.categories.stream()
                 .map(Category::getId)
                 .max(Comparator.naturalOrder())
-                .orElse(BigInteger.valueOf(0));
+                .orElse(BigInteger.ZERO);
     }
 
     @FXML
@@ -85,10 +85,11 @@ public class CategoriesController {
             return;
         }
 
-        Category newCategory = new Category(maxCategoryId.add(BigInteger.valueOf(1)), addNewCategoryName.getText(), true);
+        maxCategoryId = maxCategoryId.add(BigInteger.ONE);
+        Category newCategory = new Category(maxCategoryId, addNewCategoryName.getText(), true);
 
         categories.add(newCategory);
-        addNewCategoryName.clear();
-        addCategoryPane.setVisible(false);
+
+        onCancel();
     }
 }

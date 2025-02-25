@@ -8,16 +8,26 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import polpapntua.multimediaproject2425.enums.TaskStatus;
+import polpapntua.multimediaproject2425.helpers;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
+
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 public class TasksController {
+    private ObservableList<Task> tasks;
+    private ObservableList<Category> categories;
+    private ObservableList<Priority> priorities;
+
     @FXML
     private TableView<Task> tasksTableView;
 
@@ -28,7 +38,7 @@ public class TasksController {
     private TableColumn<Task, String> tasksDescriptionColumn;
 
     @FXML
-    private TableColumn<Task, String> tasksCategoryColumn;
+    private TableColumn<Task, Category> tasksCategoryColumn;
 
     @FXML
     private TableColumn<Task, Priority> tasksPriorityColumn;
@@ -39,38 +49,43 @@ public class TasksController {
     @FXML
     private TableColumn<Task, String> tasksStatusColumn;
 
-//    @FXML
-//    private TableColumn<Task, Void> tasksSaveColumn;
+    @FXML
+    private TableColumn<Task, Void> addTaskColumn;
+
+    @FXML
+    private AnchorPane addTaskPane;
+
+    @FXML
+    private HBox addTaskFirstRow;
+
+    @FXML
+    private TextField addNewTaskName;
+
+    @FXML
+    private TextField addNewTaskDescription;
+
+    @FXML
+    private HBox addTaskSecondRow;
+
+    @FXML
+    private ComboBox<Category> addNewTaskCategory;
+
+    @FXML
+    private ComboBox<Priority> addNewTaskPriority;
+
+    @FXML
+    private DatePicker addNewTaskDueDate;
+
+    private BigInteger maxPriorityId = BigInteger.ZERO;
 
     @FXML
     public void initialize() {
         tasksTableView.setEditable(true);
 
-//        tasksSaveColumn.setCellFactory(new Callback<>() {
-//            @Override
-//            public TableCell<Task, Void> call(TableColumn<Task, Void> param) {
-//                return new TableCell<>() {
-//                    private final Button saveButton = helpers.createButton("/icons/save-icon.png");
-//                    {
-//                        saveButton.setOnAction(event -> {
-//                            Task task = getTableView().getItems().get(getIndex());
-//                            String taskPath = "src/main/resources/data/tasks/task_" + task.getId().toString() + ".json";
-//                            serializeObject(taskPath, task);
-//                        });
-//                    }
-//
-//                    @Override
-//                    protected void updateItem(Void item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        if (empty) {
-//                            setGraphic(null);
-//                        } else {
-//                            setGraphic(saveButton);
-//                        }
-//                    }
-//                };
-//            }
-//        });
+        // Button for adding new category (it shows the corresponding modal)
+        Button addNewTaskButton = helpers.createButton("/icons/add-icon.png");
+        addNewTaskButton.setOnAction(event -> addTaskPane.setVisible(true));
+        addTaskColumn.setGraphic(addNewTaskButton);     // Place it in the column header.
 
         tasksTitleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitle()));
         tasksTitleColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
@@ -88,7 +103,7 @@ public class TasksController {
             task.setHasBeenEdited(true);
         });
 
-        tasksCategoryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory().getName()));
+        tasksCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
 
         tasksPriorityColumn.setCellValueFactory(new PropertyValueFactory<>("priority"));
         // Custom comparator for Priority column, depending on the Priority lvl.
@@ -161,31 +176,117 @@ public class TasksController {
         });
 
         tasksStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
+
+        addTaskFirstRow.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double totalWidth = newVal.doubleValue();
+            addNewTaskName.setPrefWidth(totalWidth * 0.4);
+            addNewTaskDescription.setPrefWidth(totalWidth * 0.6);
+        });
+
+        addTaskSecondRow.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double totalWidth = newVal.doubleValue();
+            addNewTaskCategory.setPrefWidth(totalWidth * 0.3);
+            addNewTaskPriority.setPrefWidth(totalWidth * 0.3);
+            addNewTaskDueDate.setPrefWidth(totalWidth * 0.4);
+        });
     }
 
     public void setNeededObjects(ObservableList<Task> tasks, ObservableList<Category> categories, ObservableList<Priority> priorities) {
+        this.tasks = tasks;
+
         tasksTableView.setItems(tasks);
 
-        tasksPriorityColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                new StringConverter<Priority>() {
-                    @Override
-                    public String toString(Priority priority) {
-                        return priority != null ? priority.getName() : "";
-                    }
+        maxPriorityId = this.tasks.stream()
+                .map(Task::getId)
+                .max(Comparator.naturalOrder())
+                .orElse(BigInteger.ZERO);
 
-                    @Override
-                    public Priority fromString(String string) {
-                        return priorities.stream()
-                                .filter(p -> p.getName().equals(string))
-                                .findFirst()
-                                .orElse(null);
-                    }
-                },
-                FXCollections.observableArrayList(priorities)
-        ));
+        // String converter for category objects
+        StringConverter<Category> categoryStringConverter = new StringConverter<>() {
+            @Override
+            public String toString(Category category) {
+                return category != null ? category.getName() : "";
+            }
+
+            @Override
+            public Category fromString(String string) {
+                return categories.stream()
+                        .filter(p -> p.getName().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        };
+
+        ObservableList<Category> categoryOptions = FXCollections.observableArrayList(categories);
+
+        tasksCategoryColumn.setCellFactory(ComboBoxTableCell.forTableColumn(categoryStringConverter, categoryOptions));
+        tasksCategoryColumn.setOnEditCommit(event -> {
+            Task task = event.getRowValue();
+            task.setCategory(event.getNewValue());
+            task.setHasBeenEdited(true);
+        });
+
+        addNewTaskCategory.setItems(categoryOptions);
+        addNewTaskCategory.setConverter(categoryStringConverter);
+
+        // String converter for priority objects
+        StringConverter<Priority> priorityStringConverter = new StringConverter<>() {
+            @Override
+            public String toString(Priority priority) {
+                return priority != null ? priority.getName() : "";
+            }
+
+            @Override
+            public Priority fromString(String string) {
+                return priorities.stream()
+                        .filter(p -> p.getName().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        };
+
+        ObservableList<Priority> priorityOptions = FXCollections.observableArrayList(priorities);
+
+        tasksPriorityColumn.setCellFactory(ComboBoxTableCell.forTableColumn(priorityStringConverter, priorityOptions));
         tasksPriorityColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setPriority(event.getNewValue());
+            task.setHasBeenEdited(true);
         });
+
+        addNewTaskPriority.setItems(priorityOptions);
+        addNewTaskPriority.setConverter(priorityStringConverter);
+    }
+
+    @FXML
+    private void onCancel() {
+        addNewTaskName.clear();
+        addNewTaskDescription.clear();
+        addNewTaskCategory.getSelectionModel().clearSelection();
+        addNewTaskPriority.getSelectionModel().clearSelection();
+        addNewTaskDueDate.setValue(null);
+
+        addTaskPane.setVisible(false);
+    }
+
+    @FXML
+    private void onTaskSave() {
+        maxPriorityId = maxPriorityId.add(BigInteger.ONE);
+        Task newTask = new Task(
+                maxPriorityId,
+                addNewTaskName.getText(),
+                addNewTaskDescription.getText(),
+                addNewTaskCategory.getSelectionModel().getSelectedItem().getId(),
+                addNewTaskCategory.getSelectionModel().getSelectedItem(),
+                addNewTaskPriority.getSelectionModel().getSelectedItem().getId(),
+                addNewTaskPriority.getSelectionModel().getSelectedItem(),
+                addNewTaskDueDate.getValue(),
+                TaskStatus.OPEN,
+                true
+        );
+
+        tasks.add(newTask);
+
+        onCancel();
     }
 }

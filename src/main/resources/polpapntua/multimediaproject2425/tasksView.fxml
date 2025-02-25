@@ -2,22 +2,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="polpapntua.multimediaproject2425.controllers.TasksController">
-<VBox AnchorPane.topAnchor="0.0"
-      AnchorPane.bottomAnchor="0.0"
-      AnchorPane.leftAnchor="0.0"
-      AnchorPane.rightAnchor="0.0">
-    <TableView fx:id="tasksTableView" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="tasksTitleColumn" text="Title"/>
-            <TableColumn fx:id="tasksDescriptionColumn" text="Description"/>
-            <TableColumn fx:id="tasksCategoryColumn" text="Category"/>
-            <TableColumn fx:id="tasksPriorityColumn" text="Priority"/>
-            <TableColumn fx:id="tasksDueDateColumn" text="Due"/>
-            <TableColumn fx:id="tasksStatusColumn" text="Status"/>
-            <!--<TableColumn fx:id="tasksSaveColumn" styleClass="saveColumn"/>-->
-        </columns>
-    </TableView>
-</VBox>
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="polpapntua.multimediaproject2425.controllers.TasksController">
+<!-- Main Tasks View -->
+<AnchorPane>
+    <VBox AnchorPane.topAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
+        <TableView fx:id="tasksTableView" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="tasksTitleColumn" text="Title"/>
+                <TableColumn fx:id="tasksDescriptionColumn" text="Description"/>
+                <TableColumn fx:id="tasksCategoryColumn" text="Category"/>
+                <TableColumn fx:id="tasksPriorityColumn" text="Priority"/>
+                <TableColumn fx:id="tasksDueDateColumn" text="Due"/>
+                <TableColumn fx:id="tasksStatusColumn" text="Status"/>
+                <TableColumn fx:id="addTaskColumn" styleClass="addColumn"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>
+
+<!-- Overlay Form -->
+<AnchorPane fx:id="addTaskPane"
+            style="-fx-background-color: rgba(0,0,0,0.5);"
+            visible="false"
+            StackPane.alignment="CENTER">
+    <VBox spacing="10"
+          style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;"
+          AnchorPane.topAnchor="50.0"
+          AnchorPane.leftAnchor="50.0"
+          AnchorPane.rightAnchor="50.0">
+        <Label text="Add New Priority"/>
+        <HBox fx:id="addTaskFirstRow" spacing="10">
+            <TextField fx:id="addNewTaskName" promptText="Task Name" />
+            <TextField fx:id="addNewTaskDescription" promptText="Task Description" />
+        </HBox>
+        <HBox fx:id="addTaskSecondRow" spacing="10">
+            <ComboBox fx:id="addNewTaskCategory" promptText="Choose a category"/>
+            <ComboBox fx:id="addNewTaskPriority" promptText="Choose a priority"/>
+            <DatePicker fx:id="addNewTaskDueDate" promptText="Due date"/>
+        </HBox>
+        <HBox spacing="10">
+            <Button text="Cancel" onAction="#onCancel" />
+            <Button text="Save" onAction="#onTaskSave" />
+        </HBox>
+    </VBox>
+</AnchorPane>
+</StackPane>

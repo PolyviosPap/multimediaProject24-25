@@ -89,7 +89,7 @@ public class MainController {
         }
 
         for (Priority priority : priorities) {
-            if (priority.getBeenEdited()) {
+            if (priority.getHasBeenEdited()) {
                 helpers.serializeObjects("src/main/resources/data/priorities.json", priorities);
                 break;
             }
