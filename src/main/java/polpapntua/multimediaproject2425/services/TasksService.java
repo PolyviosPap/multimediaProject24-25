@@ -10,6 +10,7 @@ import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,14 +62,14 @@ public class TasksService {
         return allTasks;
     }
 
-    private Category findCategoryById(Long id) {
+    private Category findCategoryById(BigInteger id) {
         return categories.stream()
                 .filter(cat -> Objects.equals(cat.getId(), id))
                 .findFirst()
                 .orElse(null); // Returns null if no match is found
     }
 
-    private Priority findPriorityById(Long id) {
+    private Priority findPriorityById(BigInteger id) {
         return priorities.stream()
                 .filter(pr -> Objects.equals(pr.getId(), id))
                 .findFirst()

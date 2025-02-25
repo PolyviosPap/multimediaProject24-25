@@ -6,19 +6,20 @@ import polpapntua.multimediaproject2425.enums.TaskStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.time.LocalDate;
 
 public class Task implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private BigInteger id;
     private String title;
     private String description;
-    private Long categoryId;
+    private BigInteger categoryId;
     @JsonIgnore
     private Category category;
-    private Long priorityId;
+    private BigInteger priorityId;
     @JsonIgnore
     private Priority priority;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -30,7 +31,7 @@ public class Task implements Serializable {
 
     public Task() { }
 
-    public Task(Long id, String title, String description, Long categoryId, Long priorityId, LocalDate dueDate, TaskStatus status) {
+    public Task(BigInteger id, String title, String description, BigInteger categoryId, BigInteger priorityId, LocalDate dueDate, TaskStatus status) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -40,7 +41,7 @@ public class Task implements Serializable {
         this.status = status;
     }
 
-    public Task(Long id, String title, String description, Long categoryId, Category category, Long priorityId, Priority priority, LocalDate dueDate) {
+    public Task(BigInteger id, String title, String description, BigInteger categoryId, Category category, BigInteger priorityId, Priority priority, LocalDate dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -51,7 +52,7 @@ public class Task implements Serializable {
         this.dueDate = dueDate;
     }
 
-    public Task(Long id, String title, String description, Long categoryId, Category category, Long priorityId, Priority priority, LocalDate dueDate, TaskStatus status) {
+    public Task(BigInteger id, String title, String description, BigInteger categoryId, Category category, BigInteger priorityId, Priority priority, LocalDate dueDate, TaskStatus status) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -63,10 +64,10 @@ public class Task implements Serializable {
         this.status = status;
     }
 
-    public Long getId() {
+    public BigInteger getId() {
         return id;
     }
-    public void setId(Long id) { this.id = id; }
+    public void setId(BigInteger id) { this.id = id; }
 
     public String getTitle() {
         return title;
@@ -80,10 +81,8 @@ public class Task implements Serializable {
     }
     public void setDescription(String description) { this.description = description; }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+    public BigInteger getCategoryId() { return categoryId; }
+    public void setCategoryId(BigInteger categoryId) { this.categoryId = categoryId; }
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) {
@@ -91,10 +90,10 @@ public class Task implements Serializable {
         this.category = category;
     }
 
-    public Long getPriorityId() {
+    public BigInteger getPriorityId() {
         return priorityId;
     }
-    public void setPriorityId(Long priorityId) { this.priorityId = priorityId; }
+    public void setPriorityId(BigInteger priorityId) { this.priorityId = priorityId; }
 
     public Priority getPriority() {
         return priority;

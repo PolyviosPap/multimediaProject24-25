@@ -6,17 +6,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.DefaultStringConverter;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.helpers;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.math.BigInteger;
+import java.util.Comparator;
 
 public class CategoriesController {
+    private ObservableList<Category> categories;
+
     @FXML
     private TableView<Category> categoriesTableView;
 
@@ -24,30 +25,25 @@ public class CategoriesController {
     private TableColumn<Category, String> categoriesNameColumn;
 
     @FXML
-    private TableColumn<Category, Void> categoriesSaveColumn;
+    private TableColumn<Category, Void> addCategoryColumn;
+
+    @FXML
+    private AnchorPane addCategoryPane;
+
+    @FXML
+    private TextField addNewCategoryName;
+
+    private BigInteger maxCategoryId = BigInteger.valueOf(0);
 
     @FXML
     public void initialize() {
         categoriesTableView.setEditable(true);  // Edit the values on the cell
         //categoriesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // added to remove the horizontal scrollbar -- maybe it will come handy later
 
-        Button saveAllButton = new Button();
-        ImageView saveIcon = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icons/save-icon.png"))));
-        saveIcon.setFitWidth(20);
-        saveIcon.setFitHeight(20);
-        saveAllButton.setPrefSize(24, 24);  // Adjusting the button size (for some reason it removes the bottom - horizontal scroll bar)
-
-        saveAllButton.setGraphic(saveIcon);
-        saveAllButton.setOnAction(event -> {
-            List<Category> categories = new ArrayList<>(categoriesTableView.getItems());
-            helpers.serializeObjects("src/main/resources/data/categories.json", categories);
-            saveAllButton.setDisable(true);
-        });
-
-        saveAllButton.setDisable(true);
-
-        // Set the button as the column header
-        categoriesSaveColumn.setGraphic(saveAllButton);
+        // Button for adding new category (it shows the corresponding modal)
+        Button addNewCategoryButton = helpers.createButton("/icons/add-icon.png");
+        addNewCategoryButton.setOnAction(event -> addCategoryPane.setVisible(true));
+        addCategoryColumn.setGraphic(addNewCategoryButton);     // Place it in the column header.
 
         categoriesNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         //categoriesNameColumn.prefWidthProperty().bind(categoriesTableView.widthProperty().multiply(1)); -- maybe it will come handy later
@@ -55,43 +51,44 @@ public class CategoriesController {
         categoriesNameColumn.setOnEditCommit(event -> {
             Category category = event.getRowValue();
             category.setName(event.getNewValue());
-            saveAllButton.setDisable(false);
+            category.setHasBeenEdited(true);
         });
-
-//        categoriesSaveColumn.setCellFactory(new Callback<>() {
-//            @Override
-//            public TableCell<Category, Void> call(TableColumn<Category, Void> param) {
-//                return new TableCell<>() {
-//                    private final Button saveButton = createButton("/icons/save-icon.png");
-//                    {
-//                        saveButton.setOnAction(event -> {
-//                            List<Category> categories = new ArrayList<>(getTableView().getItems());
-//                            helpers.serializeObjects("src/main/resources/data/categories.json", categories);
-//                        });
-//                    }
-//
-//                    @Override
-//                    protected void updateItem(Void item, boolean empty) {
-//                        super.updateItem(item, empty);
-//                        if (empty) {
-//                            setGraphic(null);
-//                        } else {
-//                            HBox buttonsBox = new HBox(5, saveButton);
-//                            setGraphic(buttonsBox);
-//                        }
-//                    }
-//                };
-//            }
-//        });
 
         // expand the name column in order to push the save column into the right side.
         categoriesNameColumn.prefWidthProperty().bind(
-                categoriesTableView.widthProperty().subtract(categoriesSaveColumn.widthProperty())
+                categoriesTableView.widthProperty().subtract(addCategoryColumn.widthProperty())
         );
     }
 
     // Method to receive categories from MainController
-    public void setCategories(ObservableList<Category> categoriesList) {
-        categoriesTableView.setItems(categoriesList);
+    public void setCategories(ObservableList<Category> categories) {
+        this.categories = categories;
+
+        categoriesTableView.setItems(this.categories);
+
+        maxCategoryId = this.categories.stream()
+                .map(Category::getId)
+                .max(Comparator.naturalOrder())
+                .orElse(BigInteger.valueOf(0));
+    }
+
+    @FXML
+    private void onCancel() {
+        addNewCategoryName.clear();
+        addCategoryPane.setVisible(false);
+    }
+
+    @FXML
+    private void onCategorySave() {
+        if (addNewCategoryName.getText().isEmpty()) {
+            helpers.showAlert("", "You need to fill all the fields!");
+            return;
+        }
+
+        Category newCategory = new Category(maxCategoryId.add(BigInteger.valueOf(1)), addNewCategoryName.getText(), true);
+
+        categories.add(newCategory);
+        addNewCategoryName.clear();
+        addCategoryPane.setVisible(false);
     }
 }

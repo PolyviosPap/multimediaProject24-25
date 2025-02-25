@@ -2,18 +2,41 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="polpapntua.multimediaproject2425.controllers.PrioritiesController">
-    <VBox AnchorPane.topAnchor="0.0"
-          AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0">
-        <TableView fx:id="prioritiesTableView" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="prioritiesNameColumn" text="Name"/>
-                <TableColumn fx:id="prioritiesLevelColumn" text="Level"/>
-                <!--<TableColumn fx:id="prioritiesSaveColumn" styleClass="saveColumn"/>-->
-            </columns>
-        </TableView>
-    </VBox>
-</AnchorPane>
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="polpapntua.multimediaproject2425.controllers.PrioritiesController">
+
+    <!-- Main Priorities View -->
+    <AnchorPane>
+        <VBox AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+            <TableView fx:id="prioritiesTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="prioritiesNameColumn" text="Name"/>
+                    <TableColumn fx:id="prioritiesLevelColumn" text="Level"/>
+                    <TableColumn fx:id="addPriorityColumn" styleClass="addColumn"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </AnchorPane>
+
+    <!-- Overlay Form -->
+    <AnchorPane fx:id="addPriorityPane"
+                style="-fx-background-color: rgba(0,0,0,0.5);"
+                visible="false"
+                StackPane.alignment="CENTER">
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;"
+              AnchorPane.topAnchor="50.0"
+              AnchorPane.leftAnchor="50.0"
+              AnchorPane.rightAnchor="50.0">
+            <Label text="Add New Priority"/>
+            <TextField fx:id="addNewPriorityName" promptText="Priority Name"/>
+            <HBox spacing="10">
+                <Button text="Cancel" onAction="#onCancel" />
+                <Button text="Save"  onAction="#onPrioritySave" />
+            </HBox>
+        </VBox>
+    </AnchorPane>
+</StackPane>

@@ -2,18 +2,40 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="polpapntua.multimediaproject2425.controllers.CategoriesController">
-    <VBox AnchorPane.topAnchor="0.0"
-          AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0">
-        <TableView fx:id="categoriesTableView" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="categoriesNameColumn" text="Name"/>
-                <!--<TableColumn fx:id="undoColumn"/>-->
-                <TableColumn fx:id="categoriesSaveColumn" styleClass="saveColumn"/>
-            </columns>
-        </TableView>
-    </VBox>
-</AnchorPane>
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="polpapntua.multimediaproject2425.controllers.CategoriesController">
+
+    <!-- Main Categories View -->
+    <AnchorPane>
+        <VBox AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+            <TableView fx:id="categoriesTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="categoriesNameColumn" text="Name"/>
+                    <TableColumn fx:id="addCategoryColumn" styleClass="addColumn"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </AnchorPane>
+
+    <!-- Overlay Form -->
+    <AnchorPane fx:id="addCategoryPane"
+                style="-fx-background-color: rgba(0,0,0,0.5);"
+                visible="false"
+                StackPane.alignment="CENTER">
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;"
+              AnchorPane.topAnchor="50.0"
+              AnchorPane.leftAnchor="50.0"
+              AnchorPane.rightAnchor="50.0">
+            <Label text="Add New Category"/>
+            <TextField fx:id="addNewCategoryName" promptText="Category Name"/>
+            <HBox spacing="10">
+                <Button text="Cancel" onAction="#onCancel" />
+                <Button text="Save"  onAction="#onCategorySave" />
+            </HBox>
+        </VBox>
+    </AnchorPane>
+</StackPane>

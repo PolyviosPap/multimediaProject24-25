@@ -2,16 +2,16 @@
     -fx-background-color: #333;
 }
 
-Button {
+.navBarButton {
     -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-font-size: 14px;
 }
 
-Button:hover {
+.navBarButton:hover {
     -fx-background-color: rgba(140, 140, 140, 0.2);
 }
 
-.saveColumn {
+.addColumn {
     -fx-pref-width: 45px;
 }

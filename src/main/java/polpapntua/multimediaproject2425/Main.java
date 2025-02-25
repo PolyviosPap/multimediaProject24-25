@@ -35,11 +35,11 @@ public class Main extends Application {
         MainController mainController = fxmlLoader.getController();
 
         // Schedule saving of edited files (if any) every 5 minutes.
-        scheduler.scheduleAtFixedRate(mainController::saveAllFiles, 5, 5, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(mainController::checkForFilesSave, 5, 5, TimeUnit.MINUTES);
 
         // Right before the closing of the main window, save all edited files.
         primaryStage.setOnCloseRequest(event -> {
-            mainController.saveAllFiles();
+            mainController.checkForFilesSave();
             System.exit(0);
         });
     }

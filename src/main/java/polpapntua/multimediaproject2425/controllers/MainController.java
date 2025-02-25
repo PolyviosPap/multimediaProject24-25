@@ -78,7 +78,7 @@ public class MainController {
         }
     }
 
-    public void saveAllFiles() {
+    public void checkForFilesSave() {
         logger.info("About to scan for edited files and save if any...");
 
         for (Category category : categories) {

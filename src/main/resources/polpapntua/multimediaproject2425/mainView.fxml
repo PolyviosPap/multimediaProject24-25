@@ -11,9 +11,9 @@
 
     <!-- Navigation Bar -->
     <HBox fx:id="navbar">
-        <Button text="Tasks" onAction="#displayTasks"/>
-        <Button text="Categories" onAction="#displayCategories"/>
-        <Button text="Priorities" onAction="#displayPriorities"/>
+        <Button text="Tasks" styleClass="navBarButton" onAction="#displayTasks"/>
+        <Button text="Categories" styleClass="navBarButton" onAction="#displayCategories"/>
+        <Button text="Priorities" styleClass="navBarButton" onAction="#displayPriorities"/>
     </HBox>
 
     <!-- Dynamic Content Area -->
