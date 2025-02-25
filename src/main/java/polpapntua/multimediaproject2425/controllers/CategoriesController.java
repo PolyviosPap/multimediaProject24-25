@@ -3,10 +3,7 @@ package polpapntua.multimediaproject2425.controllers;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.DefaultStringConverter;
@@ -14,6 +11,8 @@ import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.helpers;
 import java.math.BigInteger;
 import java.util.Comparator;
+
+import static polpapntua.multimediaproject2425.helpers.createButton;
 
 public class CategoriesController {
     private ObservableList<Category> categories;
@@ -25,7 +24,7 @@ public class CategoriesController {
     private TableColumn<Category, String> categoriesNameColumn;
 
     @FXML
-    private TableColumn<Category, Void> addCategoryColumn;
+    private TableColumn<Category, Void> actionsColumn;
 
     @FXML
     private AnchorPane addCategoryPane;
@@ -41,9 +40,9 @@ public class CategoriesController {
         //categoriesTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // added to remove the horizontal scrollbar -- maybe it will come handy later
 
         // Button for adding new category (it shows the corresponding modal)
-        Button addNewCategoryButton = helpers.createButton("/icons/add-icon.png");
+        Button addNewCategoryButton = createButton("/icons/add-icon.png");
         addNewCategoryButton.setOnAction(event -> addCategoryPane.setVisible(true));
-        addCategoryColumn.setGraphic(addNewCategoryButton);     // Place it in the column header.
+        actionsColumn.setGraphic(addNewCategoryButton);     // Place it in the column header.
 
         categoriesNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         //categoriesNameColumn.prefWidthProperty().bind(categoriesTableView.widthProperty().multiply(1)); -- maybe it will come handy later
@@ -51,12 +50,32 @@ public class CategoriesController {
         categoriesNameColumn.setOnEditCommit(event -> {
             Category category = event.getRowValue();
             category.setName(event.getNewValue());
-            category.setHasBeenEdited(true);
+        });
+
+        actionsColumn.setCellFactory(tc -> new TableCell<>() {
+            private final Button deleteButton = createButton("/icons/bin-icon.png");
+            {
+                deleteButton.setOnAction(event -> {
+                    Category selectedCategory = getTableView().getItems().get(getIndex());
+                    getTableView().getItems().remove(selectedCategory);
+                    categories.remove(selectedCategory);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
         });
 
         // expand the name column in order to push the save column into the right side.
         categoriesNameColumn.prefWidthProperty().bind(
-                categoriesTableView.widthProperty().subtract(addCategoryColumn.widthProperty())
+                categoriesTableView.widthProperty().subtract(actionsColumn.widthProperty())
         );
     }
 
@@ -86,7 +105,7 @@ public class CategoriesController {
         }
 
         maxCategoryId = maxCategoryId.add(BigInteger.ONE);
-        Category newCategory = new Category(maxCategoryId, addNewCategoryName.getText(), true);
+        Category newCategory = new Category(maxCategoryId, addNewCategoryName.getText());
 
         categories.add(newCategory);
 

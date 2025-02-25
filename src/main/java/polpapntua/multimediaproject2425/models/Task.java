@@ -3,7 +3,6 @@ package polpapntua.multimediaproject2425.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import polpapntua.multimediaproject2425.enums.TaskStatus;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -26,8 +25,6 @@ public class Task implements Serializable {
     private LocalDate dueDate;
     private TaskStatus status;
     //public List<Reminder> reminders;
-    @JsonIgnore
-    private boolean hasBeenEdited;
 
     public Task() { }
 
@@ -62,19 +59,6 @@ public class Task implements Serializable {
         this.priority = priority;
         this.dueDate = dueDate;
         this.status = status;
-    }
-
-    public Task(BigInteger id, String title, String description, BigInteger categoryId, Category category, BigInteger priorityId, Priority priority, LocalDate dueDate, TaskStatus status, boolean hasBeenEdited) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.categoryId = categoryId;
-        this.category = category;
-        this.priorityId = priorityId;
-        this.priority = priority;
-        this.dueDate = dueDate;
-        this.status = status;
-        this.hasBeenEdited = hasBeenEdited;
     }
 
     public BigInteger getId() {
@@ -125,7 +109,4 @@ public class Task implements Serializable {
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
-
-    public boolean getHasBeenEdited() { return this.hasBeenEdited; }
-    public void setHasBeenEdited(boolean hasBeenEdited) { this.hasBeenEdited = hasBeenEdited; }
 }

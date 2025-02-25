@@ -56,8 +56,6 @@ public class PrioritiesController {
         prioritiesNameColumn.setOnEditCommit(event -> {
             Priority priority = event.getRowValue();
             priority.setName(event.getNewValue());
-            priority.setHasBeenEdited(true);
-            //saveAllButton.setDisable(false);
         });
 
         prioritiesLevelColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getLevel()).asObject());
@@ -67,8 +65,6 @@ public class PrioritiesController {
             if (event.getNewValue() != null) { // Only update if input is valid
                 Priority priority = event.getRowValue();
                 priority.setLevel(event.getNewValue());
-                priority.setHasBeenEdited(true);
-                //saveAllButton.setDisable(false);
             } else { helpers.showAlert("Invalid input", "Please enter a valid number."); }
         });
 
@@ -108,7 +104,7 @@ public class PrioritiesController {
         }
 
         maxPriorityId = maxPriorityId.add(BigInteger.ONE);
-        Priority newPriority = new Priority(maxPriorityId, addNewPriorityName.getText(), addNewPriorityLevel.getValue(), true);
+        Priority newPriority = new Priority(maxPriorityId, addNewPriorityName.getText(), addNewPriorityLevel.getValue());
 
         priorities.add(newPriority);
 

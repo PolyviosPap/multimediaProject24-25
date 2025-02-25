@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polpapntua.multimediaproject2425.Main;
@@ -23,9 +22,6 @@ import static polpapntua.multimediaproject2425.helpers.serializeObject;
 
 public class MainController {
     protected static final Logger logger = LogManager.getLogger();
-
-    @FXML
-    private HBox navbar;
 
     @FXML
     private BorderPane contentPane;
@@ -78,28 +74,14 @@ public class MainController {
         }
     }
 
-    public void checkForFilesSave() {
-        logger.info("About to scan for edited files and save if any...");
+    public void saveFiles() {
+        helpers.serializeObjects("src/main/resources/data/categories.json", categories);
 
-        for (Category category : categories) {
-            if (category.getHasBeenEdited()) {
-                helpers.serializeObjects("src/main/resources/data/categories.json", categories);
-                break;
-            }
-        }
-
-        for (Priority priority : priorities) {
-            if (priority.getHasBeenEdited()) {
-                helpers.serializeObjects("src/main/resources/data/priorities.json", priorities);
-                break;
-            }
-        }
+        helpers.serializeObjects("src/main/resources/data/priorities.json", priorities);
 
         for (Task task : tasks) {
-            if (task.getHasBeenEdited()) {
-                String taskPath = "src/main/resources/data/tasks/task_" + task.getId().toString() + ".json";
-                serializeObject(taskPath, task);
-            }
+            String taskPath = "src/main/resources/data/tasks/task_" + task.getId().toString() + ".json";
+            serializeObject(taskPath, task);
         }
     }
 }

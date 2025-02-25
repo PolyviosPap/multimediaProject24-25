@@ -10,7 +10,7 @@
       fx:controller="polpapntua.multimediaproject2425.controllers.MainController">
 
     <!-- Navigation Bar -->
-    <HBox fx:id="navbar">
+    <HBox styleClass="navbar">
         <Button text="Tasks" styleClass="navBarButton" onAction="#displayTasks"/>
         <Button text="Categories" styleClass="navBarButton" onAction="#displayCategories"/>
         <Button text="Priorities" styleClass="navBarButton" onAction="#displayPriorities"/>

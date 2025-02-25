@@ -14,7 +14,7 @@
             <TableView fx:id="categoriesTableView" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="categoriesNameColumn" text="Name"/>
-                    <TableColumn fx:id="addCategoryColumn" styleClass="addColumn"/>
+                    <TableColumn fx:id="actionsColumn" styleClass="actionsColumn"/>
                 </columns>
             </TableView>
         </VBox>

@@ -17,7 +17,6 @@ import polpapntua.multimediaproject2425.helpers;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
 import polpapntua.multimediaproject2425.models.Task;
-
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,8 +24,6 @@ import java.util.Comparator;
 
 public class TasksController {
     private ObservableList<Task> tasks;
-    private ObservableList<Category> categories;
-    private ObservableList<Priority> priorities;
 
     @FXML
     private TableView<Task> tasksTableView;
@@ -92,7 +89,6 @@ public class TasksController {
         tasksTitleColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setTitle(event.getNewValue());
-            task.setHasBeenEdited(true);
         });
 
         tasksDescriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
@@ -100,7 +96,6 @@ public class TasksController {
         tasksDescriptionColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setDescription(event.getNewValue());
-            task.setHasBeenEdited(true);
         });
 
         tasksCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
@@ -170,7 +165,6 @@ public class TasksController {
                 Task task = getTableView().getItems().get(getIndex());
                 task.setDueDate(LocalDate.parse(newDate, formatter));
                 setText(newDate);
-                task.setHasBeenEdited(true);
                 setGraphic(null);
             }
         });
@@ -223,7 +217,6 @@ public class TasksController {
         tasksCategoryColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setCategory(event.getNewValue());
-            task.setHasBeenEdited(true);
         });
 
         addNewTaskCategory.setItems(categoryOptions);
@@ -251,7 +244,6 @@ public class TasksController {
         tasksPriorityColumn.setOnEditCommit(event -> {
             Task task = event.getRowValue();
             task.setPriority(event.getNewValue());
-            task.setHasBeenEdited(true);
         });
 
         addNewTaskPriority.setItems(priorityOptions);
@@ -281,8 +273,7 @@ public class TasksController {
                 addNewTaskPriority.getSelectionModel().getSelectedItem().getId(),
                 addNewTaskPriority.getSelectionModel().getSelectedItem(),
                 addNewTaskDueDate.getValue(),
-                TaskStatus.OPEN,
-                true
+                TaskStatus.OPEN
         );
 
         tasks.add(newTask);
