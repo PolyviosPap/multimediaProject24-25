@@ -1,14 +1,19 @@
 package polpapntua.multimediaproject2425.controllers;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import polpapntua.multimediaproject2425.Main;
+import polpapntua.multimediaproject2425.enums.TaskStatus;
 import polpapntua.multimediaproject2425.helpers;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.models.Priority;
@@ -17,30 +22,82 @@ import polpapntua.multimediaproject2425.services.CategoriesService;
 import polpapntua.multimediaproject2425.services.PrioritiesService;
 import polpapntua.multimediaproject2425.services.TasksService;
 import java.io.IOException;
-
+import java.time.LocalDate;
 import static polpapntua.multimediaproject2425.helpers.serializeObject;
 
 public class MainController {
     protected static final Logger logger = LogManager.getLogger();
 
+    private boolean firstRun = false;
+
     @FXML
     private BorderPane contentPane;
 
-    private final CategoriesService categoriesService = new CategoriesService("src/main/resources/data/categories.json");
-    private final ObservableList<Category> categories = FXCollections.observableArrayList(categoriesService.getAllCategories());
+    private static final CategoriesService categoriesService = new CategoriesService("src/main/resources/medialab/categories.json");
+    private static final ObservableList<Category> categories = FXCollections.observableArrayList(categoriesService.getAllCategories());
 
-    private final PrioritiesService prioritiesService = new PrioritiesService("src/main/resources/data/priorities.json");
-    private final ObservableList<Priority> priorities = FXCollections.observableArrayList(prioritiesService.getAllPriorities());
+    private static final PrioritiesService prioritiesService = new PrioritiesService("src/main/resources/medialab/priorities.json");
+    private static final ObservableList<Priority> priorities = FXCollections.observableArrayList(prioritiesService.getAllPriorities());
 
-    private final TasksService tasksService = new TasksService("src/main/resources/data/tasks", categories, priorities);
-    private final ObservableList<Task> tasks = FXCollections.observableArrayList(tasksService.getAllTasks());
+    private static final TasksService tasksService = new TasksService("src/main/resources/medialab/tasks", categories, priorities);
+    private static final ObservableList<Task> tasks = FXCollections.observableArrayList(tasksService.getAllTasks());
+
+    @FXML
+    private TextField allTasks;
+    private static final StringProperty allTasksText = new SimpleStringProperty();
+
+    @FXML
+    private TextField completedTasks;
+    private static final StringProperty completedTasksText = new SimpleStringProperty();
+
+    @FXML
+    private TextField delayedTasks;
+    private static final StringProperty delayedTasksText = new SimpleStringProperty();
+
+
+    @FXML
+    private TextField soonDueDateTasks;
+    private static final StringProperty soonDueDateTasksText = new SimpleStringProperty();
+
+    @FXML
+    public void initialize() {
+        allTasks.textProperty().bind(allTasksText);
+        completedTasks.textProperty().bind(completedTasksText);
+        delayedTasks.textProperty().bind(delayedTasksText);
+        soonDueDateTasks.textProperty().bind(soonDueDateTasksText);
+
+        updateCounters();
+        tasks.addListener((ListChangeListener<Task>) change -> updateCounters());
+    }
+
+    public static void updateCounters() {
+        allTasksText.set(tasks.size() + " tasks total");
+
+        long completedTasksCount = tasks.stream()
+                .filter(task -> task.getStatus() == TaskStatus.COMPLETED)
+                .count();
+        completedTasksText.set(completedTasksCount + " completed tasks");
+
+        long delayedTasksCount = tasks.stream()
+                .filter(task -> task.getStatus() == TaskStatus.DELAYED)
+                .count();
+        delayedTasksText.set(delayedTasksCount + " delayed tasks");
+
+        LocalDate dayAfterSevenDays = LocalDate.now().plusDays(7);
+        long soonDueDateTasksCount = tasks.stream()
+                .filter(task -> (task.getStatus() != TaskStatus.DELAYED && dayAfterSevenDays.isAfter(task.getDueDate())))
+                .count();
+        soonDueDateTasksText.set(soonDueDateTasksCount + " tasks are due to less than 7 days");
+    }
 
     public void displayTasks() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("tasksView.fxml"));  // 1. load the view
             Parent tasksView = loader.load();
             TasksController controller = loader.getController();   // 2. get its controller's instance
-            controller.setNeededObjects(tasks, categories, priorities); // 3. pass the data to the controller
+            controller.setNeededObjects(tasks, categories, priorities, firstRun); // 3. pass the data to the controller
+
+            firstRun = true;
 
             contentPane.setCenter(tasksView);
         } catch (IOException ex) {
@@ -53,7 +110,7 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("categoriesView.fxml"));  // 1. load the view
             Parent categoriesView = loader.load();
             CategoriesController controller = loader.getController();   // 2. get its controller's instance
-            controller.setCategories(categories);   // 3. pass the data to the controller
+            controller.setNeededObjects(categories, tasks);   // 3. pass the data to the controller
 
             contentPane.setCenter(categoriesView);
         } catch (IOException ex) {
@@ -75,12 +132,12 @@ public class MainController {
     }
 
     public void saveFiles() {
-        helpers.serializeObjects("src/main/resources/data/categories.json", categories);
+        helpers.serializeObjects("src/main/resources/medialab/categories.json", categories);
 
-        helpers.serializeObjects("src/main/resources/data/priorities.json", priorities);
+        helpers.serializeObjects("src/main/resources/medialab/priorities.json", priorities);
 
         for (Task task : tasks) {
-            String taskPath = "src/main/resources/data/tasks/task_" + task.getId().toString() + ".json";
+            String taskPath = "src/main/resources/medialab/tasks/task_" + task.getId().toString() + ".json";
             serializeObject(taskPath, task);
         }
     }

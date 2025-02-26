@@ -1,4 +1,8 @@
 [ {
+  "id" : 0,
+  "name" : "Default",
+  "level" : 0
+}, {
   "id" : 1,
   "name" : "Χαμηλή",
   "level" : 0

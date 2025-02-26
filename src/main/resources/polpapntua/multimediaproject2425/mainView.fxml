@@ -5,9 +5,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.BorderPane?>
 
+<?import javafx.scene.control.TextField?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="polpapntua.multimediaproject2425.controllers.MainController">
+
+    <HBox spacing="10" alignment="CENTER">
+        <TextField fx:id="allTasks" editable="false" prefWidth="150"/>
+        <TextField fx:id="completedTasks" editable="false" prefWidth="150"/>
+        <TextField fx:id="delayedTasks" editable="false" prefWidth="150"/>
+        <TextField fx:id="soonDueDateTasks" editable="false" prefWidth="200"/>
+    </HBox>
 
     <!-- Navigation Bar -->
     <HBox styleClass="navbar">

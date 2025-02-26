@@ -2,7 +2,7 @@ package polpapntua.multimediaproject2425.enums;
 
 public enum TaskStatus {
     OPEN("Open"),
-    IN_PROGRESS("In Progress"),
+    IN_PROGRESS("In_Progress"),
     POSTPONED("Postponed"),
     COMPLETED("Completed"),
     DELAYED("Delayed");

@@ -18,7 +18,7 @@
                 <TableColumn fx:id="tasksPriorityColumn" text="Priority"/>
                 <TableColumn fx:id="tasksDueDateColumn" text="Due"/>
                 <TableColumn fx:id="tasksStatusColumn" text="Status"/>
-                <TableColumn fx:id="addTaskColumn" styleClass="addColumn"/>
+                <TableColumn fx:id="actionsColumn" styleClass="actionsColumn"/>
             </columns>
         </TableView>
     </VBox>

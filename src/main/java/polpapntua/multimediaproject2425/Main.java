@@ -23,11 +23,12 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 1000, 500);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
-        primaryStage.setTitle("Task Manager");
+        primaryStage.setTitle("MediaLab Assistant");
         primaryStage.setScene(scene);
         primaryStage.show();
 
         MainController mainController = fxmlLoader.getController();
+        mainController.displayTasks();
 
         // Right before the closing of the main window, save all edited files.
         primaryStage.setOnCloseRequest(event -> {

@@ -1,5 +1,6 @@
 package polpapntua.multimediaproject2425.controllers;
 
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +21,12 @@ import polpapntua.multimediaproject2425.models.Task;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import static polpapntua.multimediaproject2425.enums.TaskStatus.DELAYED;
+import static polpapntua.multimediaproject2425.helpers.createButton;
+import static polpapntua.multimediaproject2425.helpers.showAlert;
 
 public class TasksController {
     private ObservableList<Task> tasks;
@@ -47,7 +53,7 @@ public class TasksController {
     private TableColumn<Task, String> tasksStatusColumn;
 
     @FXML
-    private TableColumn<Task, Void> addTaskColumn;
+    private TableColumn<Task, Void> actionsColumn;
 
     @FXML
     private AnchorPane addTaskPane;
@@ -82,7 +88,7 @@ public class TasksController {
         // Button for adding new category (it shows the corresponding modal)
         Button addNewTaskButton = helpers.createButton("/icons/add-icon.png");
         addNewTaskButton.setOnAction(event -> addTaskPane.setVisible(true));
-        addTaskColumn.setGraphic(addNewTaskButton);     // Place it in the column header.
+        actionsColumn.setGraphic(addNewTaskButton);     // Place it in the column header.
 
         tasksTitleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitle()));
         tasksTitleColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DefaultStringConverter()));
@@ -165,11 +171,75 @@ public class TasksController {
                 Task task = getTableView().getItems().get(getIndex());
                 task.setDueDate(LocalDate.parse(newDate, formatter));
                 setText(newDate);
+                checkForDelayedTasks();
+                MainController.updateCounters();
                 setGraphic(null);
             }
         });
 
         tasksStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
+        tasksStatusColumn.setCellFactory(column -> new TableCell<>() {
+            private final ComboBox<TaskStatus> comboBox = new ComboBox<>();
+
+            {
+                comboBox.getItems().addAll(TaskStatus.values()); // Fill ComboBox with enum values
+                comboBox.setOnAction(event -> {
+                    if (comboBox.getValue() != null) {
+                        commitEdit(comboBox.getValue().toString());
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    if (isEditing()) {
+                        // Show ComboBox in edit mode
+                        comboBox.setValue(TaskStatus.valueOf(getItem()));
+                        setGraphic(comboBox);
+                        setText(null);
+                    } else {
+                        // Show the current status
+                        setText(item);
+                        setGraphic(null);
+                    }
+                }
+            }
+
+            @Override
+            public void startEdit() {
+                if (!isEmpty()) {
+                    super.startEdit();
+                    String itemName = getItem().toUpperCase();
+                    comboBox.setValue(TaskStatus.valueOf(itemName));
+                    setGraphic(comboBox);
+                    setText(null);
+                }
+            }
+
+
+            @Override
+            public void cancelEdit() {
+                super.cancelEdit();
+                setGraphic(null);
+                setText(getItem()); // Display the current item
+            }
+
+            @Override
+            public void commitEdit(String newValue) {
+                if (newValue != null) {
+                    String enumName = newValue.toUpperCase(); // Convert to uppercase
+                    getTableView().getItems().get(getIndex()).setStatus(TaskStatus.valueOf(enumName)); // Update the model
+                    MainController.updateCounters();
+                    super.commitEdit(newValue);
+                }
+            }
+        });
 
         addTaskFirstRow.widthProperty().addListener((obs, oldVal, newVal) -> {
             double totalWidth = newVal.doubleValue();
@@ -183,10 +253,43 @@ public class TasksController {
             addNewTaskPriority.setPrefWidth(totalWidth * 0.3);
             addNewTaskDueDate.setPrefWidth(totalWidth * 0.4);
         });
+
+        actionsColumn.setCellFactory(tc -> new TableCell<>() {
+            private final Button deleteButton = createButton("/icons/bin-icon.png");
+            {
+                deleteButton.setOnAction(event -> {
+                    Task selectedTask = getTableView().getItems().get(getIndex());
+                    getTableView().getItems().remove(selectedTask);
+                    tasks.remove(selectedTask);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
+                }
+            }
+        });
+
+        DoubleBinding remainingWidth = tasksTableView.widthProperty()
+                .subtract(actionsColumn.widthProperty());
+
+        tasksTitleColumn.prefWidthProperty().bind(remainingWidth.multiply(0.2));
+        tasksDescriptionColumn.prefWidthProperty().bind(remainingWidth.multiply(0.35));
+        tasksCategoryColumn.prefWidthProperty().bind(remainingWidth.multiply(0.15));
+        tasksPriorityColumn.prefWidthProperty().bind(remainingWidth.multiply(0.09));
+        tasksDueDateColumn.prefWidthProperty().bind(remainingWidth.multiply(0.1));
+        tasksStatusColumn.prefWidthProperty().bind(remainingWidth.multiply(0.1));
     }
 
-    public void setNeededObjects(ObservableList<Task> tasks, ObservableList<Category> categories, ObservableList<Priority> priorities) {
+    public void setNeededObjects(ObservableList<Task> tasks, ObservableList<Category> categories, ObservableList<Priority> priorities, boolean firstRun) {
         this.tasks = tasks;
+
+        if (!firstRun) checkForDelayedTasks();
 
         tasksTableView.setItems(tasks);
 
@@ -279,5 +382,34 @@ public class TasksController {
         tasks.add(newTask);
 
         onCancel();
+    }
+
+    private void checkForDelayedTasks() {
+        LocalDate today = LocalDate.now();
+
+        List<String> delayedTasksTitles = new java.util.ArrayList<>(Collections.emptyList());
+
+        for (Task task : tasks) {
+            if (today.isAfter(task.getDueDate())) {
+                task.setStatus(DELAYED);
+                delayedTasksTitles.add(task.getTitle());
+            }
+        }
+
+        if (!delayedTasksTitles.isEmpty()) {
+            String title;
+            String message = String.join(", ", delayedTasksTitles);
+
+            if (delayedTasksTitles.size() == 1) {
+                title = "1 delayed task!";
+                message += " is delayed!";
+            }
+            else {
+                title = delayedTasksTitles.size() + " delayed tasks!";
+                message += " are delayed!";
+            }
+
+            showAlert(title, message);
+        }
     }
 }

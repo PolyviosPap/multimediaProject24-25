@@ -9,13 +9,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.DefaultStringConverter;
 import polpapntua.multimediaproject2425.models.Category;
 import polpapntua.multimediaproject2425.helpers;
+import polpapntua.multimediaproject2425.models.Task;
 import java.math.BigInteger;
 import java.util.Comparator;
+import java.util.Objects;
 
 import static polpapntua.multimediaproject2425.helpers.createButton;
 
 public class CategoriesController {
     private ObservableList<Category> categories;
+    private ObservableList<Task> tasks;
 
     @FXML
     private TableView<Category> categoriesTableView;
@@ -59,6 +62,8 @@ public class CategoriesController {
                     Category selectedCategory = getTableView().getItems().get(getIndex());
                     getTableView().getItems().remove(selectedCategory);
                     categories.remove(selectedCategory);
+
+                    deleteTasksViaCategoryId(selectedCategory.getId());
                 });
             }
 
@@ -80,8 +85,9 @@ public class CategoriesController {
     }
 
     // Method to receive categories from MainController
-    public void setCategories(ObservableList<Category> categories) {
+    public void setNeededObjects(ObservableList<Category> categories, ObservableList<Task> tasks) {
         this.categories = categories;
+        this.tasks = tasks;
 
         categoriesTableView.setItems(this.categories);
 
@@ -110,5 +116,9 @@ public class CategoriesController {
         categories.add(newCategory);
 
         onCancel();
+    }
+
+    private void deleteTasksViaCategoryId(BigInteger categoryId) {
+        tasks.removeIf(task -> Objects.equals(task.getCategoryId(), categoryId));
     }
 }

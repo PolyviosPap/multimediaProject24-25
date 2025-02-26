@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import polpapntua.multimediaproject2425.models.Category;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesService {
@@ -26,7 +27,7 @@ public class CategoriesService {
         } catch (IOException ex) {
             // In case of an exception, print it and return a null list.
             logger.error("Exception occurred while deserializing categories.json: {}", ex.getMessage(), ex);
-            return List.of();
+            return new ArrayList<>();
         }
     }
 

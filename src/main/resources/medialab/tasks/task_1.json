@@ -3,7 +3,7 @@
   "title" : "Ολοκλήρωση Backend",
   "description" : "Υλοποίηση API endpoints",
   "categoryId" : 1,
-  "priorityId" : 1,
-  "dueDate" : "2025-03-01",
-  "status" : "OPEN"
+  "priorityId" : 0,
+  "dueDate" : "2025-03-13",
+  "status" : "COMPLETED"
 }

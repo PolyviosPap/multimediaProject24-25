@@ -37,12 +37,12 @@ public class TasksService {
         File directory = new File(jsonFilesPath);
         if (!directory.isDirectory()) {
             System.err.println("The given path is not a directory.");
-            return List.of();
+            return new ArrayList<>();
         }
 
         File[] jsonFiles = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
         if (jsonFiles == null) {
-            return List.of();
+            return new ArrayList<>();
         }
 
         for (File jsonFile : jsonFiles) {
@@ -73,7 +73,7 @@ public class TasksService {
         return priorities.stream()
                 .filter(pr -> Objects.equals(pr.getId(), id))
                 .findFirst()
-                .orElse(null); // Returns null if no match is found
+                .orElse(new Priority(BigInteger.ZERO, "Default", 0)); // Returns the default priority if no match is found
     }
 
     public List<Task> getAllTasks() { return tasks; }
