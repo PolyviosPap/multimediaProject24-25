@@ -22,7 +22,15 @@ import polpapntua.multimediaproject2425.services.CategoriesService;
 import polpapntua.multimediaproject2425.services.PrioritiesService;
 import polpapntua.multimediaproject2425.services.TasksService;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import static polpapntua.multimediaproject2425.helpers.serializeObject;
 
 public class MainController {
@@ -139,6 +147,38 @@ public class MainController {
         for (Task task : tasks) {
             String taskPath = "src/main/resources/medialab/tasks/task_" + task.getId().toString() + ".json";
             serializeObject(taskPath, task);
+        }
+    }
+
+    public void cleanDeletedTaskFiles() throws IOException {
+        Path dir = Paths.get("src/main/resources/medialab/tasks/");
+
+        // Create a set of valid task IDs
+        Set<String> validIds = tasks.stream()
+                .map(task -> String.valueOf(task.getId())) // Assuming getId() returns an int/long
+                .collect(Collectors.toSet());
+
+        // Define regex pattern for extracting IDs from file names
+        Pattern pattern = Pattern.compile("task_(\\d+)\\.json");
+
+        try (var stream = Files.list(dir)) {
+            stream.filter(Files::isRegularFile) // Only consider files
+                .filter(path -> path.getFileName().toString().matches("task_\\d+\\.json")) // Match file format
+                    .forEach(path -> {
+                        String fileName = path.getFileName().toString();
+                        Matcher matcher = pattern.matcher(fileName);
+                        if (matcher.matches()) {
+                            String fileId = matcher.group(1);
+                            if (!validIds.contains(fileId)) {
+                                try {
+                                    Files.delete(path);
+                                    logger.info("Deleted: {}", fileName);
+                                } catch (IOException e) {
+                                    logger.error("Failed to delete: {}", fileName);
+                                }
+                            }
+                        }
+                    });
         }
     }
 }

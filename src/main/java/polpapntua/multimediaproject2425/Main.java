@@ -33,6 +33,11 @@ public class Main extends Application {
         // Right before the closing of the main window, save all edited files.
         primaryStage.setOnCloseRequest(event -> {
             mainController.saveFiles();
+            try {
+                mainController.cleanDeletedTaskFiles();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             System.exit(0);
         });
     }

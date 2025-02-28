@@ -21,10 +21,12 @@ import polpapntua.multimediaproject2425.models.Task;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import static polpapntua.multimediaproject2425.enums.TaskStatus.DELAYED;
+import static polpapntua.multimediaproject2425.enums.TaskStatus.OPEN;
 import static polpapntua.multimediaproject2425.helpers.createButton;
 import static polpapntua.multimediaproject2425.helpers.showAlert;
 
@@ -121,11 +123,26 @@ public class TasksController {
         tasksDueDateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDueDate().format(formatter)));
         tasksDueDateColumn.setCellFactory(column -> new TableCell<>() {
             private final DatePicker datePicker = new DatePicker();
+
             {
+                // Restrict past dates
+                datePicker.setDayCellFactory(picker -> new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate date, boolean empty) {
+                        super.updateItem(date, empty);
+                        if (date.isBefore(LocalDate.now())) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #d3d3d3;"); // Gray out past dates
+                        }
+                    }
+                });
+
                 datePicker.setOnAction(event -> {
                     LocalDate selectedDate = datePicker.getValue();
-                    if (selectedDate != null) {
+                    if (selectedDate != null && !selectedDate.isBefore(LocalDate.now())) {
                         commitEdit(selectedDate.format(formatter));
+                    } else {
+                        datePicker.setValue(null); // Reset invalid selection
                     }
                 });
             }
@@ -167,9 +184,14 @@ public class TasksController {
 
             @Override
             public void commitEdit(String newDate) {
+                LocalDate newLocalDate = LocalDate.parse(newDate, formatter);
+                if (newLocalDate.isBefore(LocalDate.now())) {
+                    cancelEdit(); // Reject invalid past dates
+                    return;
+                }
                 super.commitEdit(newDate);
                 Task task = getTableView().getItems().get(getIndex());
-                task.setDueDate(LocalDate.parse(newDate, formatter));
+                task.setDueDate(newLocalDate);
                 setText(newDate);
                 checkForDelayedTasks();
                 MainController.updateCounters();
@@ -180,9 +202,14 @@ public class TasksController {
         tasksStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus().toString()));
         tasksStatusColumn.setCellFactory(column -> new TableCell<>() {
             private final ComboBox<TaskStatus> comboBox = new ComboBox<>();
-
             {
-                comboBox.getItems().addAll(TaskStatus.values()); // Fill ComboBox with enum values
+                // Exclude the DELAYED status, the app sets it.
+                List<TaskStatus> filteredStatuses = Arrays.stream(TaskStatus.values())
+                        .filter(status -> status != DELAYED)
+                        .toList();
+
+                comboBox.getItems().addAll(filteredStatuses); // Add only the allowed statuses
+
                 comboBox.setOnAction(event -> {
                     if (comboBox.getValue() != null) {
                         commitEdit(comboBox.getValue().toString());
@@ -214,14 +241,20 @@ public class TasksController {
             @Override
             public void startEdit() {
                 if (!isEmpty()) {
-                    super.startEdit();
                     String itemName = getItem().toUpperCase();
+
+                    if (itemName.equals("DELAYED")) {
+                        cancelEdit(); // Prevent editing for DELAYED tasks
+                        return;
+                    }
+
+                    super.startEdit();
+
                     comboBox.setValue(TaskStatus.valueOf(itemName));
                     setGraphic(comboBox);
                     setText(null);
                 }
             }
-
 
             @Override
             public void cancelEdit() {
@@ -351,6 +384,17 @@ public class TasksController {
 
         addNewTaskPriority.setItems(priorityOptions);
         addNewTaskPriority.setConverter(priorityStringConverter);
+
+        addNewTaskDueDate.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (date.isBefore(LocalDate.now())) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #d3d3d3;"); // Gray out past dates
+                }
+            }
+        });
     }
 
     @FXML
@@ -376,7 +420,7 @@ public class TasksController {
                 addNewTaskPriority.getSelectionModel().getSelectedItem().getId(),
                 addNewTaskPriority.getSelectionModel().getSelectedItem(),
                 addNewTaskDueDate.getValue(),
-                TaskStatus.OPEN
+                OPEN
         );
 
         tasks.add(newTask);
@@ -394,6 +438,7 @@ public class TasksController {
                 task.setStatus(DELAYED);
                 delayedTasksTitles.add(task.getTitle());
             }
+            else if (task.getStatus() == DELAYED) task.setStatus(OPEN);
         }
 
         if (!delayedTasksTitles.isEmpty()) {
@@ -410,6 +455,7 @@ public class TasksController {
             }
 
             showAlert(title, message);
+            tasksTableView.refresh();   // If a task from DELAYED to OPEN (because of a manual DueDate change) we need to refresh the table.
         }
     }
 }

@@ -4,6 +4,6 @@
   "description" : "Σκούπισμα, σφουγγάρισμα, ξεσκόνισμα",
   "categoryId" : 2,
   "priorityId" : 0,
-  "dueDate" : "2025-02-20",
-  "status" : "DELAYED"
+  "dueDate" : "2025-03-01",
+  "status" : "OPEN"
 }

@@ -15,3 +15,14 @@
 .actionsColumn {
     -fx-pref-width: 45px;
 }
+
+.counterTextField:disabled {
+    -fx-background-color: transparent;
+    -fx-border-color: #ccc;
+    -fx-border-width: 1;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-opacity: 0.9;
+}

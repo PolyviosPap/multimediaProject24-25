@@ -11,10 +11,10 @@
       fx:controller="polpapntua.multimediaproject2425.controllers.MainController">
 
     <HBox spacing="10" alignment="CENTER">
-        <TextField fx:id="allTasks" editable="false" prefWidth="150"/>
-        <TextField fx:id="completedTasks" editable="false" prefWidth="150"/>
-        <TextField fx:id="delayedTasks" editable="false" prefWidth="150"/>
-        <TextField fx:id="soonDueDateTasks" editable="false" prefWidth="200"/>
+        <TextField fx:id="allTasks" editable="false" prefWidth="130" styleClass="counterTextField" disable="true"/>
+        <TextField fx:id="completedTasks" editable="false" prefWidth="140" styleClass="counterTextField" disable="true"/>
+        <TextField fx:id="delayedTasks" editable="false" prefWidth="140" styleClass="counterTextField" disable="true"/>
+        <TextField fx:id="soonDueDateTasks" editable="false" prefWidth="250" styleClass="counterTextField" disable="true"/>
     </HBox>
 
     <!-- Navigation Bar -->
