@@ -131,7 +131,7 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("prioritiesView.fxml"));  // 1. load the view
             Parent prioritiesView = loader.load();
             PrioritiesController controller = loader.getController();   // 2. get its controller's instance
-            controller.setPriorities(priorities);   // 3. pass the data to the controller
+            controller.setNeededObjects(priorities, tasks);     // 3. pass the data to the controller
 
             contentPane.setCenter(prioritiesView);
         } catch (IOException ex) {

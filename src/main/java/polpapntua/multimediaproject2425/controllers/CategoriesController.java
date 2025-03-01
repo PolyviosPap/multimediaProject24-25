@@ -17,25 +17,22 @@ import java.util.Objects;
 import static polpapntua.multimediaproject2425.helpers.createButton;
 
 public class CategoriesController {
+    private BigInteger maxCategoryId = BigInteger.ZERO;
     private ObservableList<Category> categories;
     private ObservableList<Task> tasks;
 
     @FXML
     private TableView<Category> categoriesTableView;
-
     @FXML
     private TableColumn<Category, String> categoriesNameColumn;
-
     @FXML
     private TableColumn<Category, Void> actionsColumn;
 
     @FXML
     private AnchorPane addCategoryPane;
-
     @FXML
     private TextField addNewCategoryName;
 
-    private BigInteger maxCategoryId = BigInteger.ZERO;
 
     @FXML
     public void initialize() {

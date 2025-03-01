@@ -11,36 +11,33 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.DefaultStringConverter;
 import polpapntua.multimediaproject2425.helpers;
 import polpapntua.multimediaproject2425.models.Priority;
+import polpapntua.multimediaproject2425.models.Task;
 import java.math.BigInteger;
 import java.util.Comparator;
+import java.util.Objects;
 
 import static polpapntua.multimediaproject2425.helpers.createButton;
 
 public class PrioritiesController {
+    private BigInteger maxPriorityId = BigInteger.ZERO;
     private ObservableList<Priority> priorities;
+    private ObservableList<Task> tasks;
 
     @FXML
     private TableView<Priority> prioritiesTableView;
-
     @FXML
     private TableColumn<Priority, String> prioritiesNameColumn;
-
     @FXML
     private TableColumn<Priority, Integer> prioritiesLevelColumn;
-
     @FXML
     private TableColumn<Priority, Void> actionsColumn;
 
     @FXML
     private AnchorPane addPriorityPane;
-
     @FXML
     private TextField addNewPriorityName;
-
     @FXML
     private Spinner<Integer> addNewPriorityLevel;
-
-    private BigInteger maxPriorityId = BigInteger.ZERO;
 
     @FXML
     public void initialize() {
@@ -151,6 +148,7 @@ public class PrioritiesController {
                     Priority selectedPriority = getTableView().getItems().get(getIndex());
                     getTableView().getItems().remove(selectedPriority);
                     priorities.remove(selectedPriority);
+                    updateTasksToDefaultPriority(selectedPriority.getId());
                 });
             }
 
@@ -177,8 +175,9 @@ public class PrioritiesController {
         prioritiesLevelColumn.prefWidthProperty().bind(remainingWidth.multiply(0.4));
     }
 
-    public void setPriorities(ObservableList<Priority> priorities) {
+    public void setNeededObjects(ObservableList<Priority> priorities, ObservableList<Task> tasks) {
         this.priorities = priorities;
+        this.tasks = tasks;
 
         prioritiesTableView.setItems(priorities);
 
@@ -209,5 +208,19 @@ public class PrioritiesController {
         priorities.add(newPriority);
 
         onCancel();
+    }
+
+    private void updateTasksToDefaultPriority(BigInteger priorityId) {
+        Priority defaultPriority = priorities.stream().filter(priority -> Objects.equals(priority.getId(), BigInteger.ZERO))
+                .findFirst()
+                .orElse(null);
+
+        if (defaultPriority == null) {
+            throw new RuntimeException("Default priority not found!!!");
+        }
+
+        for (Task task : tasks) {
+            if (Objects.equals(task.getPriorityId(), priorityId)) task.setPriority(defaultPriority);
+        }
     }
 }

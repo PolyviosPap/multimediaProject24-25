@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import static polpapntua.multimediaproject2425.enums.TaskStatus.DELAYED;
-import static polpapntua.multimediaproject2425.enums.TaskStatus.OPEN;
+
+import static polpapntua.multimediaproject2425.enums.TaskStatus.*;
 import static polpapntua.multimediaproject2425.helpers.createButton;
 import static polpapntua.multimediaproject2425.helpers.showAlert;
 
@@ -410,6 +410,11 @@ public class TasksController {
 
     @FXML
     private void onTaskSave() {
+        if (addNewTaskName.getText().isEmpty() || addNewTaskDescription.getText().isEmpty() || addNewTaskCategory.getSelectionModel().isEmpty() || addNewTaskPriority.getSelectionModel().isEmpty() || addNewTaskDueDate.getValue() == null) {
+            helpers.showAlert("", "You need to fill all the fields!");
+            return;
+        }
+
         maxPriorityId = maxPriorityId.add(BigInteger.ONE);
         Task newTask = new Task(
                 maxPriorityId,
@@ -434,7 +439,7 @@ public class TasksController {
         List<String> delayedTasksTitles = new java.util.ArrayList<>(Collections.emptyList());
 
         for (Task task : tasks) {
-            if (today.isAfter(task.getDueDate())) {
+            if (today.isAfter(task.getDueDate()) && task.getStatus() != COMPLETED) {
                 task.setStatus(DELAYED);
                 delayedTasksTitles.add(task.getTitle());
             }

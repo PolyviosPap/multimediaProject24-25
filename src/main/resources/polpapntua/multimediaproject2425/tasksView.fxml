@@ -34,7 +34,7 @@
           AnchorPane.topAnchor="50.0"
           AnchorPane.leftAnchor="50.0"
           AnchorPane.rightAnchor="50.0">
-        <Label text="Add New Priority"/>
+        <Label text="Add New Task"/>
         <HBox fx:id="addTaskFirstRow" spacing="10">
             <TextField fx:id="addNewTaskName" promptText="Task Name" />
             <TextField fx:id="addNewTaskDescription" promptText="Task Description" />
